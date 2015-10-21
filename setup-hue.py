@@ -1,13 +1,16 @@
 import sys                                                                          
-from beautifulhue.api import Bridge                                                 
-username = 'johnnyfive'                                                       
-bridge = Bridge(device={'ip':'192.168.1.172'}, user={'name':username})                
+from beautifulhue.api import Bridge
+
+# import global variables
+from config import *
+                                                 
+bridge = Bridge(device={'ip':philipsbridge}, user={'name':username})                
 
 def createConfig():                                                                 
     created = False                                                                 
     print 'Press the button on the Hue bridge'                                      
     while not created:                                                              
-        resource = {'user':{'devicetype': 'johnnyfive', 'name': username}}    
+        resource = {'user':{'devicetype': 'johnnyfive', 'name': philipsbridge_user}}    
         response = bridge.config.create(resource)['resource']                       
         if 'error' in response[0]:                                                  
             if response[0]['error']['type'] != 101:                                 

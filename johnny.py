@@ -43,13 +43,10 @@ from astral import Astral
 import pytz
 from flask import Flask, jsonify
 
-hashkey = ''
+# import global variables
+from config import *
 
 authfailed = 'Authentication failed'
-
-philipsbridge = 'http://192.168.1.172/'
-
-philipsbridge_user = 'johnnyfive'
 
 are_you_home_file = '/var/web/johnny-five/tmp/home'
 last_seen_file = '/var/web/johnny-five/tmp/last_seen'
@@ -138,8 +135,8 @@ def arriving(key=None):
 
 		a = Astral()
 
-		sunset = a['Lisbon'].sun(date=today, local=True)['sunset']
-		sunrise = a['Lisbon'].sun(date=today, local=True)['sunrise']
+		sunset = a[home_town].sun(date=today, local=True)['sunset']
+		sunrise = a[home_town].sun(date=today, local=True)['sunrise']
 
 		if today <= sunrise or today >= sunset:
 			lights(True)
