@@ -82,6 +82,10 @@ router.get('/ping/auth/' + hashkey, function(req, res, next) {
 router.get('/tv/on/' + hashkey, function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Turning the tv ON' }));
+
+	exec('sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
+	exec('/usr/bin/tvservice -p', function(error, stdout, stderr) {});
+
 });
 
 // /tv/off/<key>
