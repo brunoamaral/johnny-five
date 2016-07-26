@@ -1,3 +1,6 @@
+// Requirements
+var exec = require('child_process').exec;
+
 // List of End points
 
 // /
@@ -75,6 +78,21 @@ router.get('/ping/auth/' + hashkey, function(req, res, next) {
 	res.send(JSON.stringify({ response: 'Auth Pong' }));
 });
 
+// /tv/on/<key>
+router.get('/tv/on/' + hashkey, function(req, res, next) {
+	res.setHeader('Content-Type', 'application/json');
+	res.send(JSON.stringify({ response: 'Turning the tv ON' }));
+});
+
+// /tv/off/<key>
+router.get('/tv/off/' + hashkey, function(req, res, next) {
+	res.setHeader('Content-Type', 'application/json');
+	res.send(JSON.stringify({ response: 'Turning the tv OFF' }));
+
+	exec('sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
+	exec('/usr/bin/tvservice -o', function(error, stdout, stderr) {});
+
+});
 
 // serve static html
 // router.get('/home', function(req, res) {
