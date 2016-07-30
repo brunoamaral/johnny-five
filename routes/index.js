@@ -1,5 +1,7 @@
 // Requirements
 var exec = require('child_process').exec;
+var request = require('request');
+var SunCalc = require('suncalc');
 
 // List of End points
 
@@ -62,6 +64,24 @@ var router = express.Router();
 var path = require("path");
 var fs = require('fs');
 
+function tvOn(){
+	exec('sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
+	exec('/usr/bin/tvservice -p', function(error, stdout, stderr) {});
+}
+
+function tvOff(){
+	exec('sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
+	exec('/usr/bin/tvservice -o', function(error, stdout, stderr) {});
+}
+
+function lights(state){
+	url = philipsbridge + 'api/' + philipsbridge_user + '/groups/0/action'
+	data = {"on":state}
+	headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+	r = request.put(url, data=json.dumps(data), headers=headers);
+	return r;
+}
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
@@ -82,19 +102,102 @@ router.get('/ping/auth/' + hashkey, function(req, res, next) {
 router.get('/tv/on/' + hashkey, function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Turning the tv ON' }));
-
-	exec('sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
-	exec('/usr/bin/tvservice -p', function(error, stdout, stderr) {});
-
+	tvOn();
 });
 
 // /tv/off/<key>
 router.get('/tv/off/' + hashkey, function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Turning the tv OFF' }));
+	tvOff();
+});
 
-	exec('sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
-	exec('/usr/bin/tvservice -o', function(error, stdout, stderr) {});
+
+
+// /arriving/<key>
+
+router.get('/arriving/' + hashkey, function(req, res,next){
+
+		var home_command = '/usr/bin/touch ' + are_you_home_file
+		var last_seen_command = '/usr/bin/touch ' + last_seen_file
+		exec(home_command, function(error, stdout, stderr) {});
+		exec(last_seen_command, function(error, stdout, stderr) {});
+		tvOn()
+
+		// today = pytz.UTC.localize(datetime.now())
+		// tomorrow = today + timedelta(days=1)
+
+		// a = Astral()
+
+		// sunset = a[home_town].sun(date=today, local=True)['sunset']
+		// sunrise = a[home_town].sun(date=today, local=True)['sunrise']
+
+		// if today <= sunrise or today >= sunset:
+		// 	lights(True)
+		// else:
+
+		res.setHeader('Content-Type', 'application/json');
+		res.send(JSON.stringify({ response: 'Welcome home!' }));
+
+})
+
+// /leaving/<key>
+
+router.get('/leaving/' + hashkey, function(req, res,next){
+
+	var command = '/bin/rm ' + are_you_home_file
+	exec(command, shell=True)
+	tv_off_command()
+	lights(False);
+});
+
+
+// /lights/<state>/<key>
+
+router.get('/lights/' + 'state' + hashkey, function(req, res,next){
+	// 	if state == 'on':
+	// 		state = True
+	// 	elif state == 'off':
+	// 		state = False
+	// 	else:
+	// 		return jsonify({ 'return': 'Error'})
+
+	// 	return jsonify({'return': lights(state).content})
+	// else:
+	// 	return jsonify({'return': authfailed})		
+
+});
+
+// /sunset/<key>
+router.get('/sunset/' + hashkey, function(req, res,next){
+
+// 	if key == hashkey and os.path.isfile(are_you_home_file):  
+// 		state = True
+// 		return jsonify({'return': lights(state).content})
+// 	else:
+// return jsonify({'return': authfailed}) 
+
+
+});
+
+// /sunrise/<key>
+
+router.get('/sunrise/' + hashkey, function(req, res,next){
+
+// 	if key == hashkey and os.path.isfile(are_you_home_file):  
+// 		state = False
+// 		return jsonify({'return': lights(state).content})
+// 	else:
+// return jsonify({'return': authfailed}) 
+
+
+});
+
+router.get('/alloff/' + hashkey, function(req, res,next){
+		tvOff();
+		lights(False);
+		res.setHeader('Content-Type', 'application/json');
+		res.send(JSON.stringify({ response: 'Good night!' }));
 
 });
 
