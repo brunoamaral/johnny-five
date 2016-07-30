@@ -77,10 +77,18 @@ function tvOff(){
 }
 
 function lights(state){
-	url = philipsbridge + 'api/' + philipsbridge_user + '/groups/0/action'
-	data = {"on":state}
-	headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-	r = request.put(url, data=json.dumps(data), headers=headers);
+	var url = philipsbridge + 'api/' + philipsbridge_user + '/groups/0/action'
+	var data = {"on":state}
+	var headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+	r = request({
+		uri: url,
+		json: data,
+		method: "PUT",
+	}, function (error, response, body) {
+	if (!error && response.statusCode == 200) {
+	console.log(body) 
+  }
+	});
 	return r;
 }
 
@@ -90,7 +98,7 @@ router.get('/', function(req, res, next) {
 	res.send(JSON.stringify({ response: 'Hello World' }));
 });
 
-router.get('/ping', function(req, res, next) {
+router.get('/ping/:pong', function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Pong' }));
 });
@@ -150,14 +158,16 @@ router.get('/leaving/' + hashkey, function(req, res,next){
 
 // /lights/<state>/<key>
 
-router.get('/lights/:state' + '/' + hashkey, function(req, res,next){
+router.get('/lights/:state/' + hashkey, function(req, res,next){
 
-	if(state == 'on'){
+	if(req.params.state == 'on'){
 		var state = true;
-	}else if(state == 'off'){
+	}else if(req.params.state == 'off'){
 		var state = false;
+		console.log(state);
 	}
-
+console.log('this is the ');
+console.log(state);
 	lights(state);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Go go gadget lights!' }));
