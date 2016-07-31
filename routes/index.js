@@ -1,4 +1,5 @@
 // Requirements
+var config = require('../config.js');
 var exec = require('child_process').exec;
 var request = require('request');
 var SunCalc = require('suncalc');
@@ -35,32 +36,6 @@ var fs = require('fs');
 
 // /sunrise/<key>
 // Triggers a sequence of events when the sun sets
-
-
-//
-// global config file for johnny-five
-//
-
-//
-// Philips hue related stuff
-var philipsbridge = 'http://192.168.1.172/';
-var philipsbridge_user = 'johnnyfive';
-
-//
-// set your home town for sunrise/sunset calculation
-var home_town = 'Lisbon';
-var home_town_lat = '38.7223';
-var home_town_long = '9.1393';
-
-//
-// set your hashkey here, used for kind of a weak auth
-var hashkey = '77c4c6b0a85aa28e3a32042f86ff54d0';
-
-var authfailed = 'Authentication failed';
-
-var are_you_home_file = '/var/web/johnny-five/tmp/home';
-var last_seen_file = '/var/web/johnny-five/tmp/last_seen';
-
 var express = require('express');
 var router = express.Router();
 var path = require("path");
@@ -77,7 +52,7 @@ function tvOff(){
 }
 
 function lights(state){
-	var url = philipsbridge + 'api/' + philipsbridge_user + '/groups/0/action'
+	var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action'
 	var data = {"on":state}
 	var headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 	r = request({
@@ -98,45 +73,43 @@ router.get('/', function(req, res, next) {
 	res.send(JSON.stringify({ response: 'Hello World' }));
 });
 
-router.get('/ping/:pong', function(req, res, next) {
+router.get('/ping', function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Pong' }));
 });
 
-router.get('/ping/auth/' + hashkey, function(req, res, next) {
+router.get('/ping/auth/' + config.hashkey, function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Auth Pong' }));
 });
 
 // /tv/on/<key>
-router.get('/tv/on/' + hashkey, function(req, res, next) {
+router.get('/tv/on/' + config.hashkey, function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Turning the tv ON' }));
 	tvOn();
 });
 
 // /tv/off/<key>
-router.get('/tv/off/' + hashkey, function(req, res, next) {
+router.get('/tv/off/' + config.hashkey, function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Turning the tv OFF' }));
 	tvOff();
 });
 
 // /arriving/<key>
-router.get('/arriving/' + hashkey, function(req, res,next){
+router.get('/arriving/' + config.hashkey, function(req, res,next){
 
-		var home_command = '/usr/bin/touch ' + are_you_home_file;
-		var last_seen_command = '/usr/bin/touch ' + last_seen_file;
+		var home_command = '/usr/bin/touch ' + config.are_you_home_file;
+		var last_seen_command = '/usr/bin/touch ' + config.last_seen_file;
+		var today = new Date();
+		var times = SunCalc.getTimes(new Date(), config.home_town_lat, config.home_town_long);
+
 		exec(home_command, function(error, stdout, stderr) {});
 		exec(last_seen_command, function(error, stdout, stderr) {});
 		tvOn()
 
-		var today = new Date();
-		var tomorrow = today.getDate() + 1;
-
-		var times = SunCalc.getTimes(new Date(), home_town_lat, home_town_long);
-
-		if(today <= times.sunrise() || today >= times.sunset()){
+		if(today <= times['sunrise'] || today >= times['sunset'] ){
 			lights(true)
 		}
 
@@ -147,18 +120,20 @@ router.get('/arriving/' + hashkey, function(req, res,next){
 
 // /leaving/<key>
 
-router.get('/leaving/' + hashkey, function(req, res,next){
+router.get('/leaving/' + config.hashkey, function(req, res,next){
 
-	var command = '/bin/rm ' + are_you_home_file
-	exec(command, shell=True)
-	tv_off_command()
+	var command = '/bin/rm ' + config.are_you_home_file
+	exec(command, function(error, stdout, stderr) {});
+	tvOff()
 	lights(false);
+	res.setHeader('Content-Type', 'application/json');
+	res.send(JSON.stringify({ response: 'Godspeed!' }));
 });
 
 
 // /lights/<state>/<key>
 
-router.get('/lights/:state/' + hashkey, function(req, res,next){
+router.get('/lights/:state/' + config.hashkey, function(req, res,next){
 
 	if(req.params.state == 'on'){
 		var state = true;
@@ -166,8 +141,7 @@ router.get('/lights/:state/' + hashkey, function(req, res,next){
 		var state = false;
 		console.log(state);
 	}
-console.log('this is the ');
-console.log(state);
+	
 	lights(state);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Go go gadget lights!' }));
@@ -185,10 +159,10 @@ console.log(state);
 });
 
 // /sunset/<key>
-router.get('/sunset/' + hashkey, function(req, res,next){
+router.get('/sunset/' + config.hashkey, function(req, res,next){
 
 	try {
-		fs.accessSync(are_you_home_file, fs.F_OK);
+		fs.accessSync(config.are_you_home_file, fs.F_OK);
 		// Do something
 		lights(true);
 	} catch (e) {
@@ -207,9 +181,9 @@ router.get('/sunset/' + hashkey, function(req, res,next){
 
 // /sunrise/<key>
 
-router.get('/sunrise/' + hashkey, function(req, res,next){
+router.get('/sunrise/' + config.hashkey, function(req, res,next){
 	try {
-		fs.accessSync(are_you_home_file, fs.F_OK);
+		fs.accessSync(config.are_you_home_file, fs.F_OK);
 		// Do something
 	} catch (e) {
 		// It isn't accessible
@@ -225,7 +199,7 @@ router.get('/sunrise/' + hashkey, function(req, res,next){
 
 });
 
-router.get('/alloff/' + hashkey, function(req, res,next){
+router.get('/alloff/' + config.hashkey, function(req, res,next){
 		tvOff();
 		lights(false);
 		res.setHeader('Content-Type', 'application/json');
