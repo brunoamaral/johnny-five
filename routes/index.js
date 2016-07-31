@@ -42,13 +42,11 @@ var path = require("path");
 var fs = require('fs');
 
 function tvOn(){
-	exec('sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
-	exec('/usr/bin/tvservice -p', function(error, stdout, stderr) {});
+	exec('/usr/bin/tvservice -p; sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
 }
 
 function tvOff(){
-	exec('sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
-	exec('/usr/bin/tvservice -o', function(error, stdout, stderr) {});
+	exec('/usr/bin/tvservice -o; sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
 }
 
 function lights(state){
