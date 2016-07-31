@@ -1,0 +1,44 @@
+// The code below is a python script to create a user on the philips hue bridge. It is here as a placeholder. In the future this should be part of a small setup script.
+
+// import sys                                                                          
+// from beautifulhue.api import Bridge
+
+// # import global variables
+// from config import *
+                                                 
+// bridge = Bridge(device={'ip':philipsbridge}, user={'name':username})                
+
+// def createConfig():                                                                 
+//     created = False                                                                 
+//     print 'Press the button on the Hue bridge'                                      
+//     while not created:                                                              
+//         resource = {'user':{'devicetype': 'johnnyfive', 'name': philipsbridge_user}}    
+//         response = bridge.config.create(resource)['resource']                       
+//         if 'error' in response[0]:                                                  
+//             if response[0]['error']['type'] != 101:                                 
+//                 print 'Unhandled error creating configuration on the Hue'           
+//                 sys.exit(response)                                                  
+//         else:                                                                       
+//             created = True                                                          
+
+// def getSystemData():                                                                    
+//   resource = {'which':'system'}                                                     
+//   return bridge.config.get(resource)['resource']                                    
+
+// def main():                                                                         
+//   response = getSystemData()                                                        
+
+//   if 'lights' in response:                                                          
+//       print 'Connected to the Hub'                                                  
+//       print response['lights']                                                      
+//   elif 'error' in response[0]:                                                      
+//       error = response[0]['error']                                                  
+//       if error['type'] == 1:                                                        
+//           createConfig()                                                            
+//           main()                                                                    
+
+// main()                                                                              
+
+// # Uncomment this to force the cretion of a user on each run (useful for debugging)  
+// #resource = {'user':{'name': username}}                                              
+// #bridge.config.delete(resource)                                                      
