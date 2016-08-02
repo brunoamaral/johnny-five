@@ -49,6 +49,14 @@ function tvOff(){
 	exec('/usr/bin/tvservice -o; sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
 }
 
+function tvStatus(){
+	exec('/usr/bin/tvservice -s', function(error, stdout, stderr){
+		console.log(stdout);
+		var tv_status = stdout;
+	});
+	return tv_status;
+}
+
 function lights(state){
 	var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action'
 	var data = {"on":state}
@@ -94,6 +102,14 @@ router.get('/tv/off/' + config.hashkey, function(req, res, next) {
 	res.send(JSON.stringify({ response: 'Turning the tv OFF' }));
 	tvOff();
 });
+
+// /tv/status/<key>
+router.get('/tv/status/', function(req, res, next){
+	tvStatus();
+	res.setHeader('Content-Type', 'application/json');
+	res.send(JSON.stringify({ response: tv_status }));
+	
+}
 
 // /arriving/<key>
 router.get('/arriving/' + config.hashkey, function(req, res,next){
