@@ -104,12 +104,12 @@ router.get('/tv/off/' + config.hashkey, function(req, res, next) {
 });
 
 // /tv/status/<key>
-router.get('/tv/status/', function(req, res, next){
+router.get('/tv/status/' + config.hashkey, function(req, res, next){
 	tvStatus();
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: tv_status }));
 	
-}
+});
 
 // /arriving/<key>
 router.get('/arriving/' + config.hashkey, function(req, res,next){
