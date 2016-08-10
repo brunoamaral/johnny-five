@@ -52,9 +52,8 @@ function tvOff(){
 function tvStatus(){
 	exec('/usr/bin/tvservice -s', function(error, stdout, stderr){
 		console.log(stdout);
-		var tv_status = stdout;
 	});
-	return tv_status;
+	return stdout;
 }
 
 function lights(state){
@@ -105,9 +104,9 @@ router.get('/tv/off/' + config.hashkey, function(req, res, next) {
 
 // /tv/status/<key>
 router.get('/tv/status/' + config.hashkey, function(req, res, next){
-	tvStatus();
+	 
 	res.setHeader('Content-Type', 'application/json');
-	res.send(JSON.stringify({ response: tv_status }));
+	tvStatus(res.send(JSON.stringify({ response: tv_status })));
 	
 });
 
