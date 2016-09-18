@@ -72,6 +72,22 @@ function lights(state){
 	return r;
 }
 
+function alert(state){
+	var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action'
+	var data = {"on":state, "alert":"select"}
+	var headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+	r = request({
+		uri: url,
+		json: data,
+		method: "PUT",
+	}, function (error, response, body) {
+	if (!error && response.statusCode == 200) {
+	console.log(body) 
+  }
+	});
+	return r;
+}
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
@@ -168,6 +184,16 @@ router.get('/lights/:state/' + config.hashkey, function(req, res,next){
 	// 	return jsonify({'return': lights(state).content})
 	// else:
 	// 	return jsonify({'return': authfailed})		
+
+});
+
+router.get('/alert/' + config.hashkey, function(req, res,next){
+
+	var state = true;
+
+	alert(state);
+	res.setHeader('Content-Type', 'application/json');
+	res.send(JSON.stringify({ response: 'Go go gadget lights!' }));
 
 });
 
