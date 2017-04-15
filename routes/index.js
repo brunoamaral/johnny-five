@@ -115,14 +115,14 @@ router.get('/ping/auth/' + config.hashkey, function(req, res, next) {
 // /kodi/on/<key>
 router.get('/kodi/on/' + config.hashkey, function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
-	res.send(JSON.stringify({ response: 'Turning the tv ON' }));
+	res.send(JSON.stringify({ response: 'Turning kodi ON' }));
 	kodiOn();
 });
 
 // /kodi/off/<key>
 router.get('/kodi/off/' + config.hashkey, function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
-	res.send(JSON.stringify({ response: 'Turning the tv ON' }));
+	res.send(JSON.stringify({ response: 'Turning kodi OFF' }));
 	kodiOff();
 });
 // /tv/on/<key>
