@@ -41,6 +41,14 @@ var router = express.Router();
 var path = require("path");
 var fs = require('fs');
 
+function kodiOn(){
+	exec('sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
+}
+
+function kodiOff(){
+	exec('sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
+}
+
 function tvOn(){
 	exec('/usr/bin/tvservice -p; sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
 }
@@ -104,6 +112,19 @@ router.get('/ping/auth/' + config.hashkey, function(req, res, next) {
 	res.send(JSON.stringify({ response: 'Auth Pong' }));
 });
 
+// /kodi/on/<key>
+router.get('/kodi/on/' + config.hashkey, function(req, res, next) {
+	res.setHeader('Content-Type', 'application/json');
+	res.send(JSON.stringify({ response: 'Turning the tv ON' }));
+	kodiOn();
+});
+
+// /kodi/off/<key>
+router.get('/kodi/off/' + config.hashkey, function(req, res, next) {
+	res.setHeader('Content-Type', 'application/json');
+	res.send(JSON.stringify({ response: 'Turning the tv ON' }));
+	kodiOff();
+});
 // /tv/on/<key>
 router.get('/tv/on/' + config.hashkey, function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
