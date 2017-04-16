@@ -28,5 +28,5 @@ module.exports = {
 	//
 	// telegram configuration
 	token: 'TELEGRAM BOT TOKEN',
-
+	telegramUser: 'USER ID',
 };

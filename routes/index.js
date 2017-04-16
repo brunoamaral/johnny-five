@@ -276,7 +276,7 @@ router.get('/alloff/' + config.hashkey, function(req, res,next){
 router.put('/telegram/' + config.hashkey, function(req, res,next){
   try {
     var value = req.body.arg;
-    johnny.sendMessage(48263287, value );
+    johnny.sendMessage(config.telegramUser, value );
 	res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({ response: value }));
 
