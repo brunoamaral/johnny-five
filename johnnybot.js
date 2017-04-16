@@ -1,7 +1,8 @@
+var config = require('./config.js');
 const TelegramBot = require('node-telegram-bot-api');
 
 // replace the value below with the Telegram token you receive from @BotFather
-const token = '184560271:AAHzadSMnjUsjf0PH5Zb_ZeP1WzSyuXXJm8';
+var token = config.token;
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, {polling: true});
@@ -51,3 +52,4 @@ bot.onText(/Como está o meu cabelo\?/, (msg, match) => {
   // send back the matched "whatever" to the chat
   bot.sendMessage(chatId, resp);
 });
+module.exports = bot;
