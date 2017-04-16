@@ -20,6 +20,13 @@ module.exports = {
 
 	authfailed: 'Authentication failed',
 
+	//
+	// check if user is home
 	are_you_home_file: '/var/web/johnny-five/tmp/home', // EXAMPLE
 	last_seen_file: '/var/web/johnny-five/tmp/last_seen', //EXAMPLE
+
+	//
+	// telegram configuration
+	token: 'TELEGRAM BOT TOKEN',
+	telegramUser: 'USER ID',
 };

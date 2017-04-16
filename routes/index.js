@@ -4,6 +4,7 @@ var exec = require('child_process').exec;
 var request = require('request');
 var SunCalc = require('suncalc');
 var fs = require('fs');
+var johnny = require('../johnnybot');
 
 // List of End points
 
@@ -270,5 +271,21 @@ router.get('/alloff/' + config.hashkey, function(req, res,next){
 // router.get('/home', function(req, res) {
 //     res.sendFile('index.html', { root: path.join(__dirname, '../public') });
 // });
+
+// Sense and respond ! 
+router.put('/telegram/' + config.hashkey, function(req, res,next){
+  try {
+    var value = req.body.arg;
+    johnny.sendMessage(config.telegramUser, value );
+	res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ response: value }));
+
+    // Do something
+  } catch (e) {
+    // It isn't accessible
+
+  }
+});
+
 
 module.exports = router;
