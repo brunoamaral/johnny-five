@@ -38,7 +38,7 @@ bot.onText(/olá/i, (msg, match) => {
   // of the message
 
   const chatId = msg.chat.id;
-  const resp = 'hello, my name is Number 5'; // the captured "whatever"
+  const resp = 'hello, my name is Number 5. Please to meet you '+ msg.from.first_name;
 
   // send back the matched "whatever" to the chat
   bot.sendMessage(chatId, resp);
@@ -58,20 +58,35 @@ bot.onText(/is\ the user \ home?|where\ is\ the\ user?|bruno?/i, (msg, match) =>
 });
 
 bot.onText(/lights (.+)/i, function onEchoText(msg, match) {
-  const resp = 'Turning the lights ' + match[1] + '!';
-  command.lights(match[1])
+  var resp;
+  if (msg.from.username === config.telegramUser){
+    resp = 'Turning the lights ' + match[1] + '!';
+    command.lights(match[1])
+    }else{
+      resp = "I am sorry, I can't let you do that " + msg.from.first_name; 
+    }
   bot.sendMessage(msg.chat.id, resp);
 });
 
 bot.onText(/tv (.+)/i, function onEchoText(msg, match) {
-  const resp = 'Turning the TV ' + match[1] + '!';
+  var resp;
+  if (msg.from.username === config.telegramUser){
+  resp = 'Turning the TV ' + match[1] + '!';
   command.tv(match[1])
+  }else{
+    resp = "I am sorry, I can't let you do that " + msg.from.first_name; 
+  }
   bot.sendMessage(msg.chat.id, resp);
 });
 
 bot.onText(/kodi (.+)/i, function onEchoText(msg, match) {
-  const resp = 'Turning kodi ' + match[1] + '!';
-  command.kodi(match[1])
+  var resp;
+  if (msg.from.username === config.telegramUser){
+    const resp = 'Turning kodi ' + match[1] + '!';
+    command.kodi(match[1])
+  }else{
+    resp = "I am sorry, I can't let you do that " + msg.from.first_name; 
+  }
   bot.sendMessage(msg.chat.id, resp);
 });
 
