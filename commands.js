@@ -8,17 +8,17 @@ var SunCalc = require('suncalc');
 
 
 	function kodi(state){
-		if(state == 'on'){
+		if(state == 'on' || state == true || state == 'true' ){
 			exec('sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
-		}else if(state == 'off'){
+		}else if(state == 'off' || state == false || state == 'false'){
 			exec('sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
 		}
 	}
 
 	function tv(state){
-		if(state == 'on'){
+		if(state == 'on' || state == true || state == 'true'){
 			exec('/usr/bin/tvservice -p; sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
-		}else if(state == 'off'){
+		}else if(state == 'off' || state == false || state == 'false'){
 			exec('/usr/bin/tvservice -o; sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
 		}
 	}
@@ -31,9 +31,9 @@ var SunCalc = require('suncalc');
 	}
 
 	function lights(state){
-		if(state == 'on'){
+		if(state == 'on' || state == true || state == 'true'){
 			var state = true;
-		}else if(state == 'off'){
+		}else if(state == 'off' || state == false || state == 'false'){
 			var state = false;
 		}
 		var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action'
