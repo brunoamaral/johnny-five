@@ -63,5 +63,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
-app.listen(3007)
+app.listen(3007);
+console.log('Johnny Five is Alive!')
 module.exports = app;
