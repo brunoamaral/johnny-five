@@ -7,20 +7,20 @@ var SunCalc = require('suncalc');
 
 
 
-	function kodiOn(){
-		exec('sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
+	function kodi(state){
+		if(state == 'on'){
+			exec('sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
+		}else if(state == 'off'){
+			exec('sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
+		}
 	}
 
-	function kodiOff(){
-		exec('sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
-	}
-
-	function tvOn(){
-		exec('/usr/bin/tvservice -p; sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
-	}
-
-	function tvOff(){
-		exec('/usr/bin/tvservice -o; sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
+	function tv(state){
+		if(state == 'on'){
+			exec('/usr/bin/tvservice -p; sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
+		}else if(state == 'off'){
+			exec('/usr/bin/tvservice -o; sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
+		}
 	}
 
 	function tvStatus(){
@@ -31,6 +31,11 @@ var SunCalc = require('suncalc');
 	}
 
 	function lights(state){
+		if(state == 'on'){
+			var state = true;
+		}else if(state == 'off'){
+			var state = false;
+		}
 		var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action'
 		var data = {"on":state}
 		var headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
@@ -62,10 +67,8 @@ var SunCalc = require('suncalc');
 		return r;
 	}
 module.exports = {
-	kodiOn,
-	kodiOff,
-	tvOn,
-	tvOff,
+	kodi,
+	tv,
 	tvStatus,
 	lights,
 	alert,

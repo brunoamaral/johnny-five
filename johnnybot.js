@@ -1,5 +1,6 @@
-var config = require('./config.js');
+var config = require('./config');
 var fs = require('fs');
+var command = require('./commands');
 
 const TelegramBot = require('node-telegram-bot-api');
 
@@ -55,5 +56,24 @@ bot.onText(/is\ the user \ home?|where\ is\ the\ user?|bruno?/i, (msg, match) =>
   bot.sendMessage(chatId, resp);
 
 });
+
+bot.onText(/lights (.+)/i, function onEchoText(msg, match) {
+  const resp = 'Turning the lights ' + match[1] + '!';
+  command.lights(match[1])
+  bot.sendMessage(msg.chat.id, resp);
+});
+
+bot.onText(/tv (.+)/i, function onEchoText(msg, match) {
+  const resp = 'Turning the TV ' + match[1] + '!';
+  command.tv(match[1])
+  bot.sendMessage(msg.chat.id, resp);
+});
+
+bot.onText(/kodi (.+)/i, function onEchoText(msg, match) {
+  const resp = 'Turning kodi ' + match[1] + '!';
+  command.kodi(match[1])
+  bot.sendMessage(msg.chat.id, resp);
+});
+
 
 module.exports = bot;

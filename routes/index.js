@@ -72,18 +72,12 @@ router.get('/kodi/off/' + config.hashkey, function(req, res, next) {
 	res.send(JSON.stringify({ response: 'Turning kodi OFF' }));
 	command.kodiOff();
 });
-// /tv/on/<key>
-router.get('/tv/on/' + config.hashkey, function(req, res, next) {
-	res.setHeader('Content-Type', 'application/json');
-	res.send(JSON.stringify({ response: 'Turning the tv ON' }));
-	command.tvOn();
-});
 
-// /tv/off/<key>
-router.get('/tv/off/' + config.hashkey, function(req, res, next) {
+// /tv/on/<key>
+router.get('/tv/:state/' + config.hashkey, function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
-	res.send(JSON.stringify({ response: 'Turning the tv OFF' }));
-	command.tvOff();
+	res.send(JSON.stringify({ response: 'Turning the tv ' + req.params.state + '!' }));
+	command.tv(req.params.state);
 });
 
 // /tv/status/<key>
@@ -132,14 +126,7 @@ router.get('/leaving/' + config.hashkey, function(req, res,next){
 
 router.get('/lights/:state/' + config.hashkey, function(req, res,next){
 
-	if(req.params.state == 'on'){
-		var state = true;
-	}else if(req.params.state == 'off'){
-		var state = false;
-		console.log(state);
-	}
-	
-	command.lights(state);
+	command.lights(req.params.state);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Go go gadget lights!' }));
 	// 	if state == 'on':
@@ -171,7 +158,7 @@ router.get('/sunset/' + config.hashkey, function(req, res,next){
 	try {
 		fs.accessSync(config.are_you_home_file, fs.F_OK);
 		// Do something
-		lights(true);
+		command.lights(true);
 	} catch (e) {
 		// It isn't accessible
 	}
