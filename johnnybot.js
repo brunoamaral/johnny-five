@@ -31,7 +31,7 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
 //   bot.sendMessage(chatId, 'Received your message');
 // });
 
-bot.onText(/[O-o]lá/, (msg, match) => {
+bot.onText(/olá/i, (msg, match) => {
   // 'msg' is the received Message from Telegram
   // 'match' is the result of executing the regexp above on the text content
   // of the message
@@ -42,22 +42,18 @@ bot.onText(/[O-o]lá/, (msg, match) => {
   // send back the matched "whatever" to the chat
   bot.sendMessage(chatId, resp);
 });
-bot.onText(/is\ the user \ home?|where\ is\ the\ user?|bruno?/, (msg, match) => {
-  // 'msg' is the received Message from Telegram
-  // 'match' is the result of executing the regexp above on the text content
-  // of the message
 
+bot.onText(/is\ the user \ home?|where\ is\ the\ user?|bruno?/i, (msg, match) => {
   const chatId = msg.chat.id;
   var resp;
 
     if (fs.existsSync(config.are_you_home_file)) {
-      resp = 'The user is home.'; // the captured "whatever"
+      resp = 'The user is home.'; 
     }else{
-      resp = 'The user is away.'; // the captured "whatever"
+      resp = 'The user is away.'; 
     }
   bot.sendMessage(chatId, resp);
 
-  // send back the matched "whatever" to the chat
 });
 
 module.exports = bot;
