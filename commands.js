@@ -72,9 +72,10 @@ var SunCalc = require('suncalc');
 		return last_seen_data.mtime;
 	}
 module.exports = {
+	alert,
 	kodi,
+	lastSeen,
+	lights,
 	tv,
 	tvStatus,
-	lights,
-	alert,
 }

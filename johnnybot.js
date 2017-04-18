@@ -91,7 +91,7 @@ bot.onText(/kodi (.+)/i, function onEchoText(msg, match) {
 });
 
 bot.onText(/when was bruno home?/i, function onEchoText(msg, match){
-  bot.sendMessage(msg.chat.id, lastSeen(););
+  bot.sendMessage(msg.chat.id, command.lastSeen());
 });
 
 module.exports = bot;
