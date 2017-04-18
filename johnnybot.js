@@ -96,7 +96,7 @@ bot.onText(/when was bruno home?/i, function onEchoText(msg, match){
 });
 
 bot.onText(/alert/i, function onEchoText(msg, match){
-  var is_home = isHome();
+  var is_home = command.isHome();
   var resp;
   if (is_home === true ){
     command.alert();
