@@ -91,7 +91,7 @@ bot.onText(/kodi (.+)/i, function onEchoText(msg, match) {
 });
 
 bot.onText(/when was bruno home?/i, function onEchoText(msg, match){
-  var resp = command.lastSeen();
+  var resp = 'I last saw him at this time: ' + command.lastSeen();
   bot.sendMessage(msg.chat.id, resp);
 });
 
