@@ -95,4 +95,16 @@ bot.onText(/when was bruno home?/i, function onEchoText(msg, match){
   bot.sendMessage(msg.chat.id, resp);
 });
 
+bot.onText(/alert/i, function onEchoText(msg, match){
+  var is_home = isHome();
+  var resp;
+  if (is_home === true ){
+    command.alert();
+    resp = 'Sent an alert!!'
+  }else{
+    resp = 'The user isn\'t home';
+  }
+  bot.sendMessage(msg.chat.id, resp);
+});
+
 module.exports = bot;

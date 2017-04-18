@@ -67,12 +67,21 @@ var SunCalc = require('suncalc');
 		return r;
 	}
 
+	function isHome(){
+		if (fs.existsSync(config.are_you_home_file)) {
+		    return true;
+		}else{
+			return false;
+		};
+	};
+
 	function lastSeen(){
 		var last_seen_data = fs.statSync(config.last_seen_file);
 		return last_seen_data.mtime;
 	}
 module.exports = {
 	alert,
+	isHome,
 	kodi,
 	lastSeen,
 	lights,
