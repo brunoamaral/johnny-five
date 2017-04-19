@@ -3,7 +3,6 @@ var exec = require('child_process').exec;
 var fs = require('fs');
 var path = require("path");
 var request = require('request');
-var rp = require('request-promise');
 var SunCalc = require('suncalc');
 
 
@@ -81,23 +80,20 @@ var SunCalc = require('suncalc');
         return last_seen_data.mtime;
     }
 
+    var a = lightStatus()
     function lightStatus() {
-    var philips = config.philipsbridge + 'api/' + config.philipsbridge_user + '/lights';
-    var options = {
-        uri: philips,
-        headers: {
-            'User-Agent': 'Request-Promise'
-        },
-        json: true
-    };
-
-    var rp(options).then(function(response){
-        console.log('here');
-    } ).catch(function(err){
-        console.log(err);
-    } );
-    return rp;
+        var philips = config.philipsbridge + 'api/' + config.philipsbridge_user + '/lights';
+        var options = {
+            uri: philips,
+            method: 'GET',
+            json: true
+        }
+        request(options, function callback(error, response, body){
+                a = body;
+            }
+        );
     }
+
 
 module.exports = {
 	alert,
