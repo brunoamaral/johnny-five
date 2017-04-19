@@ -100,11 +100,12 @@ var SunCalc = require('suncalc');
     }
 
 module.exports = {
-    alert,
-    isHome,
-    kodi,
-    lastSeen,
-    lights,
-    tv,
-    tvStatus,
+	alert,
+	isHome,
+	kodi,
+	lastSeen,
+	lights,
+	tv,
+	lightStatus,
+	tvStatus,
 }

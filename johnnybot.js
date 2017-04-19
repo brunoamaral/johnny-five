@@ -90,7 +90,7 @@ bot.onText(/kodi (.+)/i, function onEchoText(msg, match) {
   bot.sendMessage(msg.chat.id, resp);
 });
 
-bot.onText(/when was bruno home?/i, function onEchoText(msg, match){
+bot.onText(/did you see ?/i, function onEchoText(msg, match){
   var resp = 'I last saw him at this time: ' + command.lastSeen();
   bot.sendMessage(msg.chat.id, resp);
 });
@@ -99,7 +99,12 @@ bot.onText(/alert/i, function onEchoText(msg, match){
   var is_home = command.isHome();
   var resp;
   if (is_home === true ){
-    command.alert();
+	var i = 0;
+   while ( i<3){ setInterval(function () {
+   	command.alert(); 
+   	}, 1000);
+	i++;
+	}
     resp = 'Sent an alert!!'
   }else{
     resp = 'The user isn\'t home';
