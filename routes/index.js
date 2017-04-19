@@ -1,10 +1,14 @@
 // Requirements
+var command = require('../commands');
 var config = require('../config.js');
 var exec = require('child_process').exec;
-var request = require('request');
-var SunCalc = require('suncalc');
+var express = require('express');
+var fs = require('fs');
 var johnny = require('../johnnybot');
-var command = require('../commands');
+var path = require("path");
+var request = require('request');
+var router = express.Router();
+var SunCalc = require('suncalc');
 // List of End points
 
 // /
@@ -36,10 +40,7 @@ var command = require('../commands');
 
 // /sunrise/<key>
 // Triggers a sequence of events when the sun sets
-var express = require('express');
-var router = express.Router();
-var path = require("path");
-var fs = require('fs');
+
 
 
 

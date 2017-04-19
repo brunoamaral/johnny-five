@@ -5,7 +5,7 @@ var path = require("path");
 var request = require('request');
 var SunCalc = require('suncalc');
 
-
+var philips_group0 = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action';
 
     function kodi(state){
         if(state == 'on' || state == true || state == 'true' ){
@@ -36,11 +36,11 @@ var SunCalc = require('suncalc');
         }else if(state == 'off' || state == false || state == 'false'){
             var state = false;
         }
-        var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action'
+
         var data = {"on":state}
         var headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         r = request({
-            uri: url,
+            uri: philips_group0,
             json: data,
             method: "PUT",
         }, function (error, response, body) {
@@ -52,11 +52,11 @@ var SunCalc = require('suncalc');
     }
 
     function alert(state){
-        var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action'
+
         var data = {"on":state, "alert":"select"}
         var headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         r = request({
-            uri: url,
+            uri: philips_group0,
             json: data,
             method: "PUT",
         }, function (error, response, body) {
@@ -80,22 +80,6 @@ var SunCalc = require('suncalc');
         return last_seen_data.mtime;
     }
 
-
-    var light_status;
-    function lightStatus(){
-        var philips = config.philipsbridge + 'api/' + config.philipsbridge_user + '/lights';
-        var options = {
-            uri: philips,
-            method: 'GET',
-            json: true
-        }
-        request(options, function callback(error, response, body){
-                light_status = body;
-            }
-        );
-    }
-
-
 module.exports = {
 	alert,
 	isHome,
@@ -103,6 +87,5 @@ module.exports = {
 	lastSeen,
 	lights,
 	tv,
-	lightStatus,
 	tvStatus,
 }

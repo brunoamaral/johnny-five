@@ -4,6 +4,10 @@ var command = require('./commands');
 
 const TelegramBot = require('node-telegram-bot-api');
 
+var Client = require('node-rest-client').Client;
+ 
+var client = new Client();
+
 // replace the value below with the Telegram token you receive from @BotFather
 var token = config.token;
 
@@ -107,15 +111,21 @@ bot.onText(/alert/i, function onEchoText(msg, match){
   bot.sendMessage(msg.chat.id, resp);
 });
 
-bot.onText(/did i leave the lights on?/i, function onEchoText(msg, match){
-  command.lightStatus();
-  if (light_status[1].state.on === true){
-    resp = 'yes you did';
-  }else if (light_status[1].state.on === false){
-    resp = 'no, the lights are off';
-  }
+bot.onText(/status/i, function onEchoText(msg, match){
+  var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/lights';
+  client.get(url, function (data, response) {
+      // parsed response body as js object 
+      if (data[1].state.on === true ){
+        var resp = 'The light is on'
+      }else{
+        var resp = 'The light is off'
+      }
+      bot.sendMessage(msg.chat.id, resp);
 
-  bot.sendMessage(msg.chat.id, resp);
+      // raw response 
+//      console.log(response);
+  });
+
 });
 
 module.exports = bot;
