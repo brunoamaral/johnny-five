@@ -107,6 +107,7 @@ router.get('/arriving/' + config.hashkey, function(req, res,next){
 
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify({ response: 'Welcome home!' }));
+		johnny.sendMessage(config.telegram_chat_id, 'arriving' );
 
 })
 
@@ -120,6 +121,7 @@ router.get('/leaving/' + config.hashkey, function(req, res,next){
 	command.lights(false);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Godspeed!' }));
+	johnny.sendMessage(config.telegram_chat_id, 'leaving' );
 });
 
 
@@ -130,16 +132,6 @@ router.get('/lights/:state/' + config.hashkey, function(req, res,next){
 	command.lights(req.params.state);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Go go gadget lights!' }));
-	// 	if state == 'on':
-	// 		state = True
-	// 	elif state == 'off':
-	// 		state = false
-	// 	else:
-	// 		return jsonify({ 'return': 'Error'})
-
-	// 	return jsonify({'return': lights(state).content})
-	// else:
-	// 	return jsonify({'return': authfailed})		
 
 });
 
