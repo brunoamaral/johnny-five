@@ -100,4 +100,5 @@ jspm_packages
 
 # CONFIG FILE
 config.js
-
+# TMP FILES
+tmp/
