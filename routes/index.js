@@ -1,11 +1,14 @@
 // Requirements
+var command = require('../commands');
 var config = require('../config.js');
 var exec = require('child_process').exec;
-var request = require('request');
-var SunCalc = require('suncalc');
+var express = require('express');
 var fs = require('fs');
 var johnny = require('../johnnybot');
-
+var path = require("path");
+var request = require('request');
+var router = express.Router();
+var SunCalc = require('suncalc');
 // List of End points
 
 // /
@@ -37,65 +40,9 @@ var johnny = require('../johnnybot');
 
 // /sunrise/<key>
 // Triggers a sequence of events when the sun sets
-var express = require('express');
-var router = express.Router();
-var path = require("path");
-var fs = require('fs');
 
-function kodiOn(){
-	exec('sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
-}
 
-function kodiOff(){
-	exec('sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
-}
 
-function tvOn(){
-	exec('/usr/bin/tvservice -p; sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
-}
-
-function tvOff(){
-	exec('/usr/bin/tvservice -o; sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
-}
-
-function tvStatus(){
-	exec('/usr/bin/tvservice -s', function(error, stdout, stderr){
-		console.log(stdout);
-	});
-	return stdout;
-}
-
-function lights(state){
-	var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action'
-	var data = {"on":state}
-	var headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-	r = request({
-		uri: url,
-		json: data,
-		method: "PUT",
-	}, function (error, response, body) {
-	if (!error && response.statusCode == 200) {
-	console.log(body) 
-  }
-	});
-	return r;
-}
-
-function alert(state){
-	var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action'
-	var data = {"on":state, "alert":"select"}
-	var headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-	r = request({
-		uri: url,
-		json: data,
-		method: "PUT",
-	}, function (error, response, body) {
-	if (!error && response.statusCode == 200) {
-	console.log(body) 
-  }
-	});
-	return r;
-}
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -117,34 +64,28 @@ router.get('/ping/auth/' + config.hashkey, function(req, res, next) {
 router.get('/kodi/on/' + config.hashkey, function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Turning kodi ON' }));
-	kodiOn();
+	command.kodiOn();
 });
 
 // /kodi/off/<key>
 router.get('/kodi/off/' + config.hashkey, function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Turning kodi OFF' }));
-	kodiOff();
-});
-// /tv/on/<key>
-router.get('/tv/on/' + config.hashkey, function(req, res, next) {
-	res.setHeader('Content-Type', 'application/json');
-	res.send(JSON.stringify({ response: 'Turning the tv ON' }));
-	tvOn();
+	command.kodiOff();
 });
 
-// /tv/off/<key>
-router.get('/tv/off/' + config.hashkey, function(req, res, next) {
+// /tv/on/<key>
+router.get('/tv/:state/' + config.hashkey, function(req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
-	res.send(JSON.stringify({ response: 'Turning the tv OFF' }));
-	tvOff();
+	res.send(JSON.stringify({ response: 'Turning the tv ' + req.params.state + '!' }));
+	command.tv(req.params.state);
 });
 
 // /tv/status/<key>
 router.get('/tv/status/' + config.hashkey, function(req, res, next){
 	 
 	res.setHeader('Content-Type', 'application/json');
-	tvStatus(res.send(JSON.stringify({ response: tv_status })));
+	command.tvStatus(res.send(JSON.stringify({ response: tv_status })));
 	
 });
 
@@ -158,14 +99,15 @@ router.get('/arriving/' + config.hashkey, function(req, res,next){
 
 		exec(home_command, function(error, stdout, stderr) {});
 		exec(last_seen_command, function(error, stdout, stderr) {});
-		tvOn()
+		command.tvOn()
 
 		if(today <= times['sunrise'] || today >= times['sunset'] ){
-			lights(true)
+			command.lights(true)
 		}
 
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify({ response: 'Welcome home!' }));
+		johnny.sendMessage(config.telegram_chat_id, 'arriving' );
 
 })
 
@@ -175,10 +117,11 @@ router.get('/leaving/' + config.hashkey, function(req, res,next){
 
 	var command = '/bin/rm ' + config.are_you_home_file
 	exec(command, function(error, stdout, stderr) {});
-	tvOff()
-	lights(false);
+	command.tvOff()
+	command.lights(false);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Godspeed!' }));
+	johnny.sendMessage(config.telegram_chat_id, 'leaving' );
 });
 
 
@@ -186,26 +129,9 @@ router.get('/leaving/' + config.hashkey, function(req, res,next){
 
 router.get('/lights/:state/' + config.hashkey, function(req, res,next){
 
-	if(req.params.state == 'on'){
-		var state = true;
-	}else if(req.params.state == 'off'){
-		var state = false;
-		console.log(state);
-	}
-	
-	lights(state);
+	command.lights(req.params.state);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Go go gadget lights!' }));
-	// 	if state == 'on':
-	// 		state = True
-	// 	elif state == 'off':
-	// 		state = false
-	// 	else:
-	// 		return jsonify({ 'return': 'Error'})
-
-	// 	return jsonify({'return': lights(state).content})
-	// else:
-	// 	return jsonify({'return': authfailed})		
 
 });
 
@@ -213,7 +139,7 @@ router.get('/alert/' + config.hashkey, function(req, res,next){
 
 	var state = true;
 
-	alert(state);
+	command.alert(state);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Go go gadget lights!' }));
 
@@ -225,7 +151,7 @@ router.get('/sunset/' + config.hashkey, function(req, res,next){
 	try {
 		fs.accessSync(config.are_you_home_file, fs.F_OK);
 		// Do something
-		lights(true);
+		command.lights(true);
 	} catch (e) {
 		// It isn't accessible
 	}
@@ -248,7 +174,7 @@ router.get('/sunrise/' + config.hashkey, function(req, res,next){
 		// Do something
 	} catch (e) {
 		// It isn't accessible
-		lights(false);
+		command.lights(false);
 	}
 
 // 	if key == hashkey and os.path.isfile(are_you_home_file):  
@@ -261,8 +187,8 @@ router.get('/sunrise/' + config.hashkey, function(req, res,next){
 });
 
 router.get('/alloff/' + config.hashkey, function(req, res,next){
-		tvOff();
-		lights(false);
+		command.tvOff();
+		command.lights(false);
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify({ response: 'Good night!' }));
 });
@@ -276,7 +202,7 @@ router.get('/alloff/' + config.hashkey, function(req, res,next){
 router.put('/telegram/' + config.hashkey, function(req, res,next){
   try {
     var value = req.body.arg;
-    johnny.sendMessage(config.telegramUser, value );
+    johnny.sendMessage(config.telegram_chat_id, value );
 	res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({ response: value }));
 
