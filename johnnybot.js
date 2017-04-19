@@ -99,16 +99,22 @@ bot.onText(/alert/i, function onEchoText(msg, match){
   var is_home = command.isHome();
   var resp;
   if (is_home === true ){
-	var i = 0;
-   while ( i<3){ setInterval(function () {
    	command.alert(); 
-   	}, 1000);
-	i++;
-	}
     resp = 'Sent an alert!!'
   }else{
     resp = 'The user isn\'t home';
   }
+  bot.sendMessage(msg.chat.id, resp);
+});
+
+bot.onText(/did i leave the lights on?/i, function onEchoText(msg, match){
+  command.lightStatus();
+  if (light_status[1].state.on === true){
+    resp = 'yes you did';
+  }else if (light_status[1].state.on === false){
+    resp = 'no, the lights are off';
+  }
+
   bot.sendMessage(msg.chat.id, resp);
 });
 

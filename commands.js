@@ -80,8 +80,9 @@ var SunCalc = require('suncalc');
         return last_seen_data.mtime;
     }
 
-    var a = lightStatus()
-    function lightStatus() {
+
+    var light_status;
+    function lightStatus(){
         var philips = config.philipsbridge + 'api/' + config.philipsbridge_user + '/lights';
         var options = {
             uri: philips,
@@ -89,7 +90,7 @@ var SunCalc = require('suncalc');
             json: true
         }
         request(options, function callback(error, response, body){
-                a = body;
+                light_status = body;
             }
         );
     }
