@@ -93,13 +93,12 @@ router.get('/tv/status/' + config.hashkey, function(req, res, next){
 router.get('/arriving/' + config.hashkey, function(req, res,next){
 
 		var home_command = '/usr/bin/touch ' + config.are_you_home_file;
-		var last_seen_command = '/usr/bin/touch ' + config.last_seen_file;
 		var today = new Date();
 		var times = SunCalc.getTimes(new Date(), config.home_town_lat, config.home_town_long);
 
 		exec(home_command, function(error, stdout, stderr) {});
-		exec(last_seen_command, function(error, stdout, stderr) {});
-		command.tvOn()
+		command.rememberLastSeen();
+		command.tvOn();
 
 		if(today <= times['sunrise'] || today >= times['sunset'] ){
 			command.lights(true)
@@ -122,6 +121,7 @@ router.get('/leaving/' + config.hashkey, function(req, res,next){
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Godspeed!' }));
 	johnny.sendMessage(config.telegram_chat_id, 'leaving' );
+	command.rememberLastSeen();
 });
 
 

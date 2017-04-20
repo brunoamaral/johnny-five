@@ -7,6 +7,11 @@ var SunCalc = require('suncalc');
 
 var philips_group0 = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action';
 
+    function rememberLastSeen(){
+        var last_seen_command = '/usr/bin/touch ' + config.last_seen_file;
+        exec(last_seen_command, function(error, stdout, stderr) {});
+    }
+
     function kodi(state){
         if(state == 'on' || state == true || state == 'true' ){
             exec('sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
@@ -86,6 +91,7 @@ module.exports = {
 	kodi,
 	lastSeen,
 	lights,
+    rememberLastSeen,
 	tv,
 	tvStatus,
 }
