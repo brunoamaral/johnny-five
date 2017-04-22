@@ -213,5 +213,25 @@ router.put('/telegram/' + config.hashkey, function(req, res,next){
   }
 });
 
+router.post('/activity/' + config.hashkey, function(req, res,next){
+  try {
+    var user = req.body.user;
+    var action = req.body.action;
+    var location = req.body.location;
+    var time = new Date();
+
+    var resp = 'I last saw ' + user + ' ' + action + ' at ' + location + ' on ' + time;
+
+    johnny.sendMessage(config.telegram_chat_id, resp );
+	res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ response: resp }));
+
+    // Do something
+  } catch (e) {
+    // It isn't accessible
+
+  }
+});
+
 
 module.exports = router;

@@ -29,4 +29,9 @@ module.exports = {
 	// telegram configuration
 	token: 'TELEGRAM BOT TOKEN',
 	telegramUser: 'USER NAME',
+	telegram_chat_id: '',
+
+	//
+	// Location 
+	home: '38.7405994,-9.130999699999961',
 };
