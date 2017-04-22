@@ -114,8 +114,8 @@ router.get('/arriving/' + config.hashkey, function(req, res,next){
 
 router.get('/leaving/' + config.hashkey, function(req, res,next){
 
-	var command = '/bin/rm ' + config.are_you_home_file
-	exec(command, function(error, stdout, stderr) {});
+	var not_home_command = '/bin/rm ' + config.are_you_home_file
+	exec(not_home_command, function(error, stdout, stderr) {});
 	command.tvOff()
 	command.lights(false);
 	res.setHeader('Content-Type', 'application/json');
