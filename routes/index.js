@@ -1,9 +1,11 @@
 // Requirements
 var command = require('../commands');
 var config = require('../config.js');
+var database = require('../database.json');
 var exec = require('child_process').exec;
 var express = require('express');
 var fs = require('fs');
+var sqlite3 = require('sqlite3').verbose();
 var johnny = require('../johnnybot');
 var path = require("path");
 var request = require('request');
@@ -222,6 +224,17 @@ router.post('/activity/' + config.hashkey, function(req, res,next){
     var time = new Date();
 
     var resp = 'I last saw ' + user + ' ' + action + ' at ' + location + ' on ' + time;
+	function addActivity(user, action, location, time){
+		var db = new sqlite3.Database(database.prod.filename);
+		console.log(user, action, location, time);
+		db.serialize( function(){
+			db.run('Insert into activity values(NULL,"' + user + '", "' + action + '","' + location + '","' + time.toString() + '")' );
+			});
+
+			db.close();	
+		};
+		
+	addActivity(user, action, location, time);
 
     johnny.sendMessage(config.telegram_chat_id, resp );
 	res.setHeader('Content-Type', 'application/json');

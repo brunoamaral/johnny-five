@@ -20,6 +20,7 @@
     "request": "^2.81.0",
     "serve-favicon": "^2.3.0",
     "sqlite": "^2.5.0",
+    "sqlite3": "^3.1.8",
     "suncalc": "^1.7.0"
   }
 }

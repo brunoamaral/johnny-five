@@ -34,4 +34,5 @@ module.exports = {
 	//
 	// Location 
 	home: '38.7405994,-9.130999699999961',
+
 };
