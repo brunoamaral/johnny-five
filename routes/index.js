@@ -100,7 +100,7 @@ router.get('/arriving/' + config.hashkey, function(req, res,next){
 
 		exec(home_command, function(error, stdout, stderr) {});
 		command.rememberLastSeen();
-		command.tv(false);
+		command.tv(true);
 		console.log(times);
 		if(today <= times['sunrise'] || today >= times['sunset'] ){
 			johnny.sendMessage(config.telegram_chat_id, 'It\'s so dark! I am going to turn on the lights');
@@ -190,7 +190,7 @@ router.get('/sunrise/' + config.hashkey, function(req, res,next){
 });
 
 router.get('/alloff/' + config.hashkey, function(req, res,next){
-		command.tvOff();
+		command.tv(false);
 		command.lights(false);
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify({ response: 'Good night!' }));
