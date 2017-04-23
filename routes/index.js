@@ -216,7 +216,7 @@ router.put('/telegram/' + config.hashkey, function(req, res,next){
   }
 });
 
-router.post('/activity/' + config.hashkey, function(req, res,next){
+router.put('/activity/' + config.hashkey, function(req, res,next){
   try {
     var user = req.body.user;
     var action = req.body.action;
