@@ -7,9 +7,24 @@ var SunCalc = require('suncalc');
 
 var philips_group0 = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action';
 
+    function addActivity(user, action, location, time){
+        var db = new sqlite3.Database(database.prod.filename);
+        console.log(user, action, location, time);
+        db.serialize( function(){
+            db.run('Insert into activity values(NULL,"' + user + '", "' + action + '","' + location + '","' + time.toString() + '")' );
+            });
+
+            db.close(); 
+    };
+
     function rememberLastSeen(){
-        var last_seen_command = '/usr/bin/touch ' + config.last_seen_file;
-        exec(last_seen_command, function(error, stdout, stderr) {});
+        var db = new sqlite3.Database(database.prod.filename);
+        db.serialize( function(){
+            db.all('SELECT * FROM activity ORDER BY id DESC LIMIT 1', function(err, rows){
+                console.log(rows)
+                
+            })
+        })
     }
 
     function kodi(state){
@@ -86,6 +101,7 @@ var philips_group0 = config.philipsbridge + 'api/' + config.philipsbridge_user +
     }
 
 module.exports = {
+    addActivity,
 	alert,
 	isHome,
 	kodi,

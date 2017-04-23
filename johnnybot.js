@@ -53,9 +53,9 @@ bot.onText(/is\ the user \ home?|where\ is\ the\ user?|bruno?/i, (msg, match) =>
   var resp;
 
     if (fs.existsSync(config.are_you_home_file)) {
-      resp = 'The user is home.'; 
+      resp = 'Admin is home.'; 
     }else{
-      resp = 'The user is away.'; 
+      resp = 'Admin is away.'; 
     }
   bot.sendMessage(chatId, resp);
 

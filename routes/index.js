@@ -95,11 +95,13 @@ router.get('/tv/status/' + config.hashkey, function(req, res, next){
 router.get('/arriving/' + config.hashkey, function(req, res,next){
 
 		var home_command = '/usr/bin/touch ' + config.are_you_home_file;
-		var today = new Date();
 		var times = SunCalc.getTimes(new Date(), config.home_town_lat, config.home_town_long);
 
 		exec(home_command, function(error, stdout, stderr) {});
-		command.rememberLastSeen();
+
+		var today = new Date();
+		command.addActivity('Bruno', 'arriving', 'home', today);
+
 		command.tv(true);
 		console.log(times);
 		if(today <= times['sunrise'] || today >= times['sunset'] ){
@@ -109,8 +111,6 @@ router.get('/arriving/' + config.hashkey, function(req, res,next){
 
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify({ response: 'Welcome home!' }));
-		johnny.sendMessage(config.telegram_chat_id, 'arriving' );
-
 })
 
 // /leaving/<key>
@@ -124,7 +124,10 @@ router.get('/leaving/' + config.hashkey, function(req, res,next){
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Godspeed!' }));
 	johnny.sendMessage(config.telegram_chat_id, 'leaving' );
-	command.rememberLastSeen();
+
+	var today = new Date();
+	command.addActivity('Bruno', 'leaving', 'home', today);
+
 });
 
 
@@ -224,17 +227,8 @@ router.put('/activity/' + config.hashkey, function(req, res,next){
     var time = new Date();
 
     var resp = 'I last saw ' + user + ' ' + action + ' at ' + location + ' on ' + time;
-	function addActivity(user, action, location, time){
-		var db = new sqlite3.Database(database.prod.filename);
-		console.log(user, action, location, time);
-		db.serialize( function(){
-			db.run('Insert into activity values(NULL,"' + user + '", "' + action + '","' + location + '","' + time.toString() + '")' );
-			});
-
-			db.close();	
-		};
 		
-	addActivity(user, action, location, time);
+	command.addActivity(user, action, location, time);
 
     johnny.sendMessage(config.telegram_chat_id, resp );
 	res.setHeader('Content-Type', 'application/json');
