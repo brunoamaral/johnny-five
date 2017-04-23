@@ -98,10 +98,11 @@ router.get('/arriving/' + config.hashkey, function(req, res,next){
 
 		exec(home_command, function(error, stdout, stderr) {});
 		command.rememberLastSeen();
-		command.tvOn();
-
+		command.tv(false);
+		console.log(times);
 		if(today <= times['sunrise'] || today >= times['sunset'] ){
-			command.lights(true)
+			johnny.sendMessage(config.telegram_chat_id, 'It\'s so dark! I am going to turn on the lights');
+			command.lights(true);
 		}
 
 		res.setHeader('Content-Type', 'application/json');
@@ -116,7 +117,7 @@ router.get('/leaving/' + config.hashkey, function(req, res,next){
 
 	var not_home_command = '/bin/rm ' + config.are_you_home_file
 	exec(not_home_command, function(error, stdout, stderr) {});
-	command.tvOff()
+	command.tv(false)
 	command.lights(false);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Godspeed!' }));
