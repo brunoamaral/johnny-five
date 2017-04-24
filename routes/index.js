@@ -91,24 +91,28 @@ router.get('/tv/status/' + config.hashkey, function(req, res, next){
 
 // /arriving/<key>
 router.get('/arriving/' + config.hashkey, function(req, res,next){
-
+	try {
 		var home_command = '/usr/bin/touch ' + config.are_you_home_file;
-		var today = new Date();
 		var times = SunCalc.getTimes(new Date(), config.home_town_lat, config.home_town_long);
 
 		exec(home_command, function(error, stdout, stderr) {});
-		command.rememberLastSeen();
-		command.tvOn();
 
+		var today = new Date();
+		command.addActivity('Bruno', 'arriving', 'home', today);
+
+		command.tv(true);
+		console.log(times);
 		if(today <= times['sunrise'] || today >= times['sunset'] ){
-			command.lights(true)
+			johnny.sendMessage(config.telegram_chat_id, 'It\'s so dark! I am going to turn on the lights');
+			command.lights(true);
 		}
 
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify({ response: 'Welcome home!' }));
-		johnny.sendMessage(config.telegram_chat_id, 'arriving' );
-
-})
+	} catch (e) {
+		console.log(e)
+	}
+});
 
 // /leaving/<key>
 
@@ -116,12 +120,15 @@ router.get('/leaving/' + config.hashkey, function(req, res,next){
 
 	var not_home_command = '/bin/rm ' + config.are_you_home_file
 	exec(not_home_command, function(error, stdout, stderr) {});
-	command.tvOff()
+	command.tv(false)
 	command.lights(false);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Godspeed!' }));
 	johnny.sendMessage(config.telegram_chat_id, 'leaving' );
-	command.rememberLastSeen();
+
+	var today = new Date();
+	command.addActivity('Bruno', 'leaving', 'Home', today);
+
 });
 
 
@@ -157,13 +164,6 @@ router.get('/sunset/' + config.hashkey, function(req, res,next){
 	}
 
 
-// 	if key == hashkey and os.path.isfile(are_you_home_file):  
-// 		state = True
-// 		return jsonify({'return': lights(state).content})
-// 	else:
-// return jsonify({'return': authfailed}) 
-
-
 });
 
 // /sunrise/<key>
@@ -187,7 +187,7 @@ router.get('/sunrise/' + config.hashkey, function(req, res,next){
 });
 
 router.get('/alloff/' + config.hashkey, function(req, res,next){
-		command.tvOff();
+		command.tv(false);
 		command.lights(false);
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify({ response: 'Good night!' }));
@@ -205,6 +205,28 @@ router.put('/telegram/' + config.hashkey, function(req, res,next){
     johnny.sendMessage(config.telegram_chat_id, value );
 	res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({ response: value }));
+
+    // Do something
+  } catch (e) {
+    // It isn't accessible
+
+  }
+});
+
+router.put('/activity/' + config.hashkey, function(req, res,next){
+  try {
+    var user = req.body.user;
+    var action = req.body.action;
+    var location = req.body.location;
+    var time = new Date();
+
+    var resp = 'I last saw ' + user + ' ' + action + ' at ' + location + ' on ' + time;
+		
+	command.addActivity(user, action, location, time);
+
+    johnny.sendMessage(config.telegram_chat_id, resp );
+	res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ response: resp }));
 
     // Do something
   } catch (e) {

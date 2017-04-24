@@ -1,6 +1,8 @@
 var config = require('./config');
 var fs = require('fs');
 var command = require('./commands');
+var database = require('./database.json');
+var sqlite3 = require('sqlite3').verbose();
 
 const TelegramBot = require('node-telegram-bot-api');
 
@@ -48,16 +50,44 @@ bot.onText(/olá/i, (msg, match) => {
   bot.sendMessage(chatId, resp);
 });
 
-bot.onText(/is\ the user \ home?|where\ is\ the\ user?|bruno?/i, (msg, match) => {
+bot.onText(/is\ the user \ home?|where\ is\ the\ admin?|bruno?/i, (msg, match) => {
   const chatId = msg.chat.id;
   var resp;
 
     if (fs.existsSync(config.are_you_home_file)) {
-      resp = 'The user is home.'; 
+      resp = 'Admin is home.'; 
     }else{
-      resp = 'The user is away.'; 
+      resp = 'Admin is away.'; 
     }
-  bot.sendMessage(chatId, resp);
+
+    var db = new sqlite3.Database(database.prod.filename);
+
+    var activity = { user: '' , action: '' , location: '' , datetime: '' }
+    db.serialize(function() {
+
+        db.all("SELECT * FROM activity ORDER BY id DESC LIMIT 1", function(err, rows) {
+
+            if(err != null){
+                console.log(err);
+                callback(err);
+            }
+            
+            activity = { 
+              user: rows[0].user,
+              action: rows[0].action,
+              location: rows[0].location,
+              datetime: rows[0].datetime
+             };
+
+             var saw_user = 'I last saw '+ activity.user + ' '+ activity.action+' at '+activity.location+'. It was '+ activity.datetime;
+            bot.sendMessage(chatId, saw_user);
+
+            
+        });
+        db.close();
+      });
+
+    bot.sendMessage(chatId, resp);
 
 });
 

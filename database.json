@@ -1,0 +1,17 @@
+{
+  "dev": {
+    "driver": "sqlite",
+    "filename": "./brain.db"
+  },
+
+  "test": {
+    "driver": "sqlite",
+    "filename": ":memory:"
+  },
+
+  "prod": {
+    "driver": "sqlite",
+    "filename": "./brain.db"
+  }
+
+}

@@ -1,16 +1,23 @@
 var config = require('./config.js');
+var database = require('./database.json');
 var exec = require('child_process').exec;
 var fs = require('fs');
 var path = require("path");
 var request = require('request');
 var SunCalc = require('suncalc');
+var sqlite3 = require('sqlite3').verbose();
 
 var philips_group0 = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action';
 
-    function rememberLastSeen(){
-        var last_seen_command = '/usr/bin/touch ' + config.last_seen_file;
-        exec(last_seen_command, function(error, stdout, stderr) {});
-    }
+    function addActivity(user, action, location, time){
+        var db = new sqlite3.Database(database.prod.filename);
+        console.log(user, action, location, time);
+        db.serialize( function(){
+            db.run('Insert into activity values(NULL,"' + user + '", "' + action + '","' + location + '","' + time.toString() + '")' );
+            });
+
+            db.close(); 
+    };
 
     function kodi(state){
         if(state == 'on' || state == true || state == 'true' ){
@@ -86,12 +93,12 @@ var philips_group0 = config.philipsbridge + 'api/' + config.philipsbridge_user +
     }
 
 module.exports = {
+    addActivity,
 	alert,
 	isHome,
 	kodi,
 	lastSeen,
 	lights,
-    rememberLastSeen,
 	tv,
 	tvStatus,
 }
