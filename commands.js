@@ -87,11 +87,6 @@ var philips_group0 = config.philipsbridge + 'api/' + config.philipsbridge_user +
         };
     };
 
-    function lastSeen(){
-        var last_seen_data = fs.statSync(config.last_seen_file);
-        return last_seen_data.mtime;
-    }
-
 module.exports = {
     addActivity,
 	alert,

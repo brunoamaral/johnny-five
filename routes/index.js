@@ -92,10 +92,8 @@ router.get('/tv/status/' + config.hashkey, function(req, res, next){
 // /arriving/<key>
 router.get('/arriving/' + config.hashkey, function(req, res,next){
 	try {
-		var home_command = '/usr/bin/touch ' + config.are_you_home_file;
-		var times = SunCalc.getTimes(new Date(), config.home_town_lat, config.home_town_long);
 
-		exec(home_command, function(error, stdout, stderr) {});
+		var times = SunCalc.getTimes(new Date(), config.home_town_lat, config.home_town_long);
 
 		var today = new Date();
 		command.addActivity('Bruno', 'arriving', 'home', today);
@@ -118,8 +116,7 @@ router.get('/arriving/' + config.hashkey, function(req, res,next){
 
 router.get('/leaving/' + config.hashkey, function(req, res,next){
 
-	var not_home_command = '/bin/rm ' + config.are_you_home_file
-	exec(not_home_command, function(error, stdout, stderr) {});
+
 	command.tv(false)
 	command.lights(false);
 	res.setHeader('Content-Type', 'application/json');
