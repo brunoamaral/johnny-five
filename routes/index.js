@@ -1,11 +1,9 @@
 // Requirements
 var command = require('../commands');
 var config = require('../config.js');
-var database = require('../database.json');
 var exec = require('child_process').exec;
 var express = require('express');
 var fs = require('fs');
-var sqlite3 = require('sqlite3').verbose();
 var johnny = require('../johnnybot');
 var path = require("path");
 var request = require('request');
@@ -93,7 +91,7 @@ router.get('/tv/status/' + config.hashkey, function(req, res, next){
 
 // /arriving/<key>
 router.get('/arriving/' + config.hashkey, function(req, res,next){
-
+	try {
 		var home_command = '/usr/bin/touch ' + config.are_you_home_file;
 		var times = SunCalc.getTimes(new Date(), config.home_town_lat, config.home_town_long);
 
@@ -111,7 +109,11 @@ router.get('/arriving/' + config.hashkey, function(req, res,next){
 
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify({ response: 'Welcome home!' }));
-})
+	} catch (e) {
+		console.log('oh no')
+		console.log(e)
+	}
+});
 
 // /leaving/<key>
 
