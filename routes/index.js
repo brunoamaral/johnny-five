@@ -110,7 +110,6 @@ router.get('/arriving/' + config.hashkey, function(req, res,next){
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify({ response: 'Welcome home!' }));
 	} catch (e) {
-		console.log('oh no')
 		console.log(e)
 	}
 });
@@ -128,7 +127,7 @@ router.get('/leaving/' + config.hashkey, function(req, res,next){
 	johnny.sendMessage(config.telegram_chat_id, 'leaving' );
 
 	var today = new Date();
-	command.addActivity('Bruno', 'leaving', 'home', today);
+	command.addActivity('Bruno', 'leaving', 'Home', today);
 
 });
 
@@ -163,13 +162,6 @@ router.get('/sunset/' + config.hashkey, function(req, res,next){
 	} catch (e) {
 		// It isn't accessible
 	}
-
-
-// 	if key == hashkey and os.path.isfile(are_you_home_file):  
-// 		state = True
-// 		return jsonify({'return': lights(state).content})
-// 	else:
-// return jsonify({'return': authfailed}) 
 
 
 });

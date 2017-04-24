@@ -19,16 +19,6 @@ var philips_group0 = config.philipsbridge + 'api/' + config.philipsbridge_user +
             db.close(); 
     };
 
-    function rememberLastSeen(){
-        var db = new sqlite3.Database(database.prod.filename);
-        db.serialize( function(){
-            db.all('SELECT * FROM activity ORDER BY id DESC LIMIT 1', function(err, rows){
-                console.log(rows)
-                
-            })
-        })
-    }
-
     function kodi(state){
         if(state == 'on' || state == true || state == 'true' ){
             exec('sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
@@ -109,7 +99,6 @@ module.exports = {
 	kodi,
 	lastSeen,
 	lights,
-    rememberLastSeen,
 	tv,
 	tvStatus,
 }
