@@ -153,9 +153,25 @@ router.get('/alert/' + config.hashkey, function(req, res,next){
 router.get('/sunset/' + config.hashkey, function(req, res,next){
 
 	try {
-		fs.accessSync(config.are_you_home_file, fs.F_OK);
-		// Do something
-		command.lights(true);
+		var db = new sqlite3.Database(database.prod.filename);
+		var is_empty = null;
+		db.serialize( function(){
+		   db.all('select is_empty from house;', function(err,rows){
+		    
+		    if ( rows[0].is_empty === 1 ){
+ 
+		    }else{
+		    	// Do something
+		    	command.lights(true);
+		    }
+		    
+
+
+		   } );
+
+		});
+		db.close(); 
+
 	} catch (e) {
 		// It isn't accessible
 	}
@@ -167,19 +183,35 @@ router.get('/sunset/' + config.hashkey, function(req, res,next){
 
 router.get('/sunrise/' + config.hashkey, function(req, res,next){
 	try {
-		fs.accessSync(config.are_you_home_file, fs.F_OK);
+		var db = new sqlite3.Database(database.prod.filename);
+		var is_empty = null;
+		db.serialize(function() {
+		    db.all('select is_empty from house;', function(err, rows) {
+
+		        if (rows[0].is_empty === 1) {
+		            //'There is no one home ';
+		        } else {
+		            var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/lights';
+		            client.get(url, function(data, response) {
+		                // parsed response body as js object 
+		                if (data[1].state.on === true) {
+		                    command.lights(false);
+		                } else {
+
+		                }
+
+		            });
+
+		        }
+		    })
+		});
+
+		db.close(); 
 		// Do something
 	} catch (e) {
 		// It isn't accessible
-		command.lights(false);
+
 	}
-
-// 	if key == hashkey and os.path.isfile(are_you_home_file):  
-// 		state = false
-// 		return jsonify({'return': lights(state).content})
-// 	else:
-// return jsonify({'return': authfailed}) 
-
 
 });
 
@@ -189,11 +221,6 @@ router.get('/alloff/' + config.hashkey, function(req, res,next){
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify({ response: 'Good night!' }));
 });
-
-// serve static html
-// router.get('/home', function(req, res) {
-//     res.sendFile('index.html', { root: path.join(__dirname, '../public') });
-// });
 
 // Sense and respond ! 
 router.put('/telegram/' + config.hashkey, function(req, res,next){
