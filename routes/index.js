@@ -152,7 +152,6 @@ router.get('/alert/' + config.hashkey, function(req, res,next){
 // /sunset/<key>
 router.get('/sunset/' + config.hashkey, function(req, res,next){
 
-	try {
 		var db = new sqlite3.Database(database.prod.filename);
 		var is_empty = null;
 		db.serialize( function(){
@@ -164,25 +163,20 @@ router.get('/sunset/' + config.hashkey, function(req, res,next){
 		    	// Do something
 		    	command.lights(true);
 		    }
-		    
-
-
 		   } );
 
 		});
 		db.close(); 
-
-	} catch (e) {
+		res.setHeader('Content-Type', 'application/json');
+		res.send(JSON.stringify({ response: 'Sun in the sky, you know how I feel ...' }));
 		// It isn't accessible
-	}
-
-
+	
 });
 
 // /sunrise/<key>
 
 router.get('/sunrise/' + config.hashkey, function(req, res,next){
-	try {
+
 		var db = new sqlite3.Database(database.prod.filename);
 		var is_empty = null;
 		db.serialize(function() {
@@ -208,10 +202,10 @@ router.get('/sunrise/' + config.hashkey, function(req, res,next){
 
 		db.close(); 
 		// Do something
-	} catch (e) {
-		// It isn't accessible
+		res.setHeader('Content-Type', 'application/json');
+		res.send(JSON.stringify({ response: 'Sunrise, sunrise Looks like mornin\' in your eyes' }));
 
-	}
+		// It isn't accessible
 
 });
 
