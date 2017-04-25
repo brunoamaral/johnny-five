@@ -1,6 +1,9 @@
 // Requirements
 var command = require('../commands');
 var config = require('../config.js');
+var Client = require('node-rest-client').Client;
+var client = new Client();
+var database = require('../database.json');
 var exec = require('child_process').exec;
 var express = require('express');
 var fs = require('fs');
@@ -8,7 +11,10 @@ var johnny = require('../johnnybot');
 var path = require("path");
 var request = require('request');
 var router = express.Router();
+var sqlite3 = require('sqlite3').verbose();
 var SunCalc = require('suncalc');
+
+
 // List of End points
 
 // /
@@ -155,22 +161,17 @@ router.get('/sunset/' + config.hashkey, function(req, res,next){
 		var db = new sqlite3.Database(database.prod.filename);
 		var is_empty = null;
 		db.serialize( function(){
-		   db.all('select is_empty from house;', function(err,rows){
+		   db.all('SELECT is_empty FROM house;', function(err,rows){
 		    
-		    if ( rows[0].is_empty === 1 ){
- 
-		    }else{
-		    	// Do something
-		    	command.lights(true);
-		    }
+		    if ( rows[0].is_empty === 0 ){ command.lights(true);}
 		   } );
-
+		   db.close();
 		});
-		db.close(); 
+ 
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify({ response: 'Sun in the sky, you know how I feel ...' }));
-		// It isn't accessible
-	
+
+
 });
 
 // /sunrise/<key>
@@ -180,11 +181,11 @@ router.get('/sunrise/' + config.hashkey, function(req, res,next){
 		var db = new sqlite3.Database(database.prod.filename);
 		var is_empty = null;
 		db.serialize(function() {
-		    db.all('select is_empty from house;', function(err, rows) {
+		    db.all('SELECT is_empty FROM house;', function(err, rows) {
 
-		        if (rows[0].is_empty === 1) {
-		            //'There is no one home ';
-		        } else {
+		        if (rows[0].is_empty === 0) {
+		            //'There is someone home ';
+
 		            var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/lights';
 		            client.get(url, function(data, response) {
 		                // parsed response body as js object 
@@ -195,19 +196,11 @@ router.get('/sunrise/' + config.hashkey, function(req, res,next){
 		                }
 
 		            });
-
 		        }
-		    })
+		    });
+		    db.close(); 
 		});
-
-		db.close(); 
-		// Do something
-		res.setHeader('Content-Type', 'application/json');
-		res.send(JSON.stringify({ response: 'Sunrise, sunrise Looks like mornin\' in your eyes' }));
-
-		// It isn't accessible
-
-});
+} );
 
 router.get('/alloff/' + config.hashkey, function(req, res,next){
 		command.tv(false);
