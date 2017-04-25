@@ -91,7 +91,33 @@ bot.onText(/is\ the user \ home?|where\ is\ the\ admin?|bruno?/i, (msg, match) =
 
 });
 
-bot.onText(/lights (.+)/i, function onEchoText(msg, match) {
+bot.onText(/home/i, function onEchoText(msg, match) {
+
+  var db = new sqlite3.Database(database.prod.filename);
+  var is_empty = null;
+  db.serialize( function(){
+     db.all('select is_empty from house;', function(err,rows){
+      
+      if ( rows[0].is_empty === 1 ){
+        var resp = 'There is no one home ';
+        bot.sendMessage(msg.chat.id, resp);   
+      }else{
+        var resp = 'There is someone home';
+        bot.sendMessage(msg.chat.id, resp);
+      }
+      
+
+
+     } );
+
+  });
+  db.close(); 
+
+
+
+});
+
+bot.onText(/^lights (on|off)$/i, function onEchoText(msg, match) {
   var resp;
   if (msg.from.username === config.telegramUser){
     resp = 'Turning the lights ' + match[1] + '!';
@@ -102,7 +128,7 @@ bot.onText(/lights (.+)/i, function onEchoText(msg, match) {
   bot.sendMessage(msg.chat.id, resp);
 });
 
-bot.onText(/tv (.+)/i, function onEchoText(msg, match) {
+bot.onText(/tv (on|off)/i, function onEchoText(msg, match) {
   var resp;
   if (msg.from.username === config.telegramUser){
   resp = 'Turning the TV ' + match[1] + '!';
@@ -113,7 +139,7 @@ bot.onText(/tv (.+)/i, function onEchoText(msg, match) {
   bot.sendMessage(msg.chat.id, resp);
 });
 
-bot.onText(/kodi (.+)/i, function onEchoText(msg, match) {
+bot.onText(/kodi (on|off)/i, function onEchoText(msg, match) {
   var resp;
   if (msg.from.username === config.telegramUser){
     const resp = 'Turning kodi ' + match[1] + '!';
@@ -141,7 +167,7 @@ bot.onText(/alert/i, function onEchoText(msg, match){
   bot.sendMessage(msg.chat.id, resp);
 });
 
-bot.onText(/status/i, function onEchoText(msg, match){
+bot.onText(/lights status/i, function onEchoText(msg, match){
   var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/lights';
   client.get(url, function (data, response) {
       // parsed response body as js object 

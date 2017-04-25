@@ -92,7 +92,7 @@ router.get('/tv/status/' + config.hashkey, function(req, res, next){
 // /arriving/<key>
 router.get('/arriving/' + config.hashkey, function(req, res,next){
 	try {
-
+		command.house(false);
 		var times = SunCalc.getTimes(new Date(), config.home_town_lat, config.home_town_long);
 
 		var today = new Date();
@@ -116,7 +116,7 @@ router.get('/arriving/' + config.hashkey, function(req, res,next){
 
 router.get('/leaving/' + config.hashkey, function(req, res,next){
 
-
+	command.house(true);
 	command.tv(false)
 	command.lights(false);
 	res.setHeader('Content-Type', 'application/json');
