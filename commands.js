@@ -11,13 +11,27 @@ var philips_group0 = config.philipsbridge + 'api/' + config.philipsbridge_user +
 
     function addActivity(user, action, location, time){
         var db = new sqlite3.Database(database.prod.filename);
-        console.log(user, action, location, time);
         db.serialize( function(){
             db.run('Insert into activity values(NULL,"' + user + '", "' + action + '","' + location + '","' + time.toString() + '")' );
             });
 
             db.close(); 
     };
+
+    function house(is_empty){
+        var db = new sqlite3.Database(database.prod.filename);
+        db.serialize( function(){
+            if (is_empty == true ) {
+                is_empty = 1;
+            }else if (is_empty == false) {
+                is_empty = 0;
+            }
+            db.run('INSERT OR REPLACE INTO house (id, is_empty) VALUES (1,'+ is_empty +');' );
+            });
+
+            db.close(); 
+    };
+
 
     function kodi(state){
         if(state == 'on' || state == true || state == 'true' ){
@@ -79,25 +93,13 @@ var philips_group0 = config.philipsbridge + 'api/' + config.philipsbridge_user +
         return r;
     }
 
-    function isHome(){
-        if (fs.existsSync(config.are_you_home_file)) {
-            return true;
-        }else{
-            return false;
-        };
-    };
 
-    function lastSeen(){
-        var last_seen_data = fs.statSync(config.last_seen_file);
-        return last_seen_data.mtime;
-    }
 
 module.exports = {
     addActivity,
 	alert,
-	isHome,
+    house,
 	kodi,
-	lastSeen,
 	lights,
 	tv,
 	tvStatus,

@@ -98,10 +98,8 @@ router.get('/tv/status/' + config.hashkey, function(req, res, next){
 // /arriving/<key>
 router.get('/arriving/' + config.hashkey, function(req, res,next){
 	try {
-		var home_command = '/usr/bin/touch ' + config.are_you_home_file;
+		command.house(false);
 		var times = SunCalc.getTimes(new Date(), config.home_town_lat, config.home_town_long);
-
-		exec(home_command, function(error, stdout, stderr) {});
 
 		var today = new Date();
 		command.addActivity('Bruno', 'arriving', 'home', today);
@@ -124,8 +122,7 @@ router.get('/arriving/' + config.hashkey, function(req, res,next){
 
 router.get('/leaving/' + config.hashkey, function(req, res,next){
 
-	var not_home_command = '/bin/rm ' + config.are_you_home_file
-	exec(not_home_command, function(error, stdout, stderr) {});
+	command.house(true);
 	command.tv(false)
 	command.lights(false);
 	res.setHeader('Content-Type', 'application/json');
@@ -166,15 +163,14 @@ router.get('/sunset/' + config.hashkey, function(req, res,next){
 		db.serialize( function(){
 		   db.all('SELECT is_empty FROM house;', function(err,rows){
 		    
-		    if ( rows[0].is_empty === 0 ){
- 		    	command.lights(true);
-		    }
+		    if ( rows[0].is_empty === 0 ){ command.lights(true);}
 		   } );
 		   db.close();
 		});
  
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify({ response: 'Sun in the sky, you know how I feel ...' }));
+
 
 });
 
@@ -200,19 +196,11 @@ router.get('/sunrise/' + config.hashkey, function(req, res,next){
 		                }
 
 		            });
-
 		        }
 		    });
 		    db.close(); 
 		});
-
-// 	if key == hashkey and os.path.isfile(are_you_home_file):  
-// 		state = false
-// 		return jsonify({'return': lights(state).content})
-// 	else:
-// return jsonify({'return': authfailed}) 
-
-});
+} );
 
 router.get('/alloff/' + config.hashkey, function(req, res,next){
 		command.tv(false);
@@ -220,11 +208,6 @@ router.get('/alloff/' + config.hashkey, function(req, res,next){
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify({ response: 'Good night!' }));
 });
-
-// serve static html
-// router.get('/home', function(req, res) {
-//     res.sendFile('index.html', { root: path.join(__dirname, '../public') });
-// });
 
 // Sense and respond ! 
 router.put('/telegram/' + config.hashkey, function(req, res,next){
