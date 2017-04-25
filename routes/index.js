@@ -1,6 +1,9 @@
 // Requirements
 var command = require('../commands');
 var config = require('../config.js');
+var Client = require('node-rest-client').Client;
+var client = new Client();
+var database = require('../database.json');
 var exec = require('child_process').exec;
 var express = require('express');
 var fs = require('fs');
@@ -8,7 +11,10 @@ var johnny = require('../johnnybot');
 var path = require("path");
 var request = require('request');
 var router = express.Router();
+var sqlite3 = require('sqlite3').verbose();
 var SunCalc = require('suncalc');
+
+
 // List of End points
 
 // /
@@ -155,34 +161,56 @@ router.get('/alert/' + config.hashkey, function(req, res,next){
 // /sunset/<key>
 router.get('/sunset/' + config.hashkey, function(req, res,next){
 
-	try {
-		fs.accessSync(config.are_you_home_file, fs.F_OK);
-		// Do something
-		command.lights(true);
-	} catch (e) {
-		// It isn't accessible
-	}
-
+		var db = new sqlite3.Database(database.prod.filename);
+		var is_empty = null;
+		db.serialize( function(){
+		   db.all('SELECT is_empty FROM house;', function(err,rows){
+		    
+		    if ( rows[0].is_empty === 0 ){
+ 		    	command.lights(true);
+		    }
+		   } );
+		   db.close();
+		});
+ 
+		res.setHeader('Content-Type', 'application/json');
+		res.send(JSON.stringify({ response: 'Sun in the sky, you know how I feel ...' }));
 
 });
 
 // /sunrise/<key>
 
 router.get('/sunrise/' + config.hashkey, function(req, res,next){
-	try {
-		fs.accessSync(config.are_you_home_file, fs.F_OK);
-		// Do something
-	} catch (e) {
-		// It isn't accessible
-		command.lights(false);
-	}
+
+		var db = new sqlite3.Database(database.prod.filename);
+		var is_empty = null;
+		db.serialize(function() {
+		    db.all('SELECT is_empty FROM house;', function(err, rows) {
+
+		        if (rows[0].is_empty === 0) {
+		            //'There is someone home ';
+
+		            var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/lights';
+		            client.get(url, function(data, response) {
+		                // parsed response body as js object 
+		                if (data[1].state.on === true) {
+		                    command.lights(false);
+		                } else {
+
+		                }
+
+		            });
+
+		        }
+		    });
+		    db.close(); 
+		});
 
 // 	if key == hashkey and os.path.isfile(are_you_home_file):  
 // 		state = false
 // 		return jsonify({'return': lights(state).content})
 // 	else:
 // return jsonify({'return': authfailed}) 
-
 
 });
 
