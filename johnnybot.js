@@ -11,7 +11,7 @@ var Client = require('node-rest-client').Client;
 var client = new Client();
 
 // replace the value below with the Telegram token you receive from @BotFather
-var token = config.token;
+var token = config.telegram.token;
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, {polling: true});
@@ -54,11 +54,15 @@ bot.onText(/is\ the user \ home?|where\ is\ the\ admin?|bruno?/i, (msg, match) =
   const chatId = msg.chat.id;
   var resp;
 
-    if (fs.existsSync(config.are_you_home_file)) {
-      resp = 'Admin is home.'; 
-    }else{
-      resp = 'Admin is away.'; 
-    }
+    var db = new sqlite3.Database(database.prod.filename);
+    var is_empty = null;
+    db.serialize( function(){
+       db.all('SELECT is_empty FROM house;', function(err,rows){
+        
+        if ( rows[0].is_empty === 0 ){ resp = 'Admin is home.';} else { resp = 'Admin is away.'; }
+       } );
+       db.close();
+    });
 
     var db = new sqlite3.Database(database.prod.filename);
 
@@ -119,7 +123,7 @@ bot.onText(/home/i, function onEchoText(msg, match) {
 
 bot.onText(/^lights (on|off)$/i, function onEchoText(msg, match) {
   var resp;
-  if (msg.from.username === config.telegramUser){
+  if (msg.from.username === config.telegram.user){
     resp = 'Turning the lights ' + match[1] + '!';
     command.lights(match[1])
     }else{
@@ -130,7 +134,7 @@ bot.onText(/^lights (on|off)$/i, function onEchoText(msg, match) {
 
 bot.onText(/tv (on|off)/i, function onEchoText(msg, match) {
   var resp;
-  if (msg.from.username === config.telegramUser){
+  if (msg.from.username === config.telegram.user){
   resp = 'Turning the TV ' + match[1] + '!';
   command.tv(match[1])
   }else{
@@ -141,7 +145,7 @@ bot.onText(/tv (on|off)/i, function onEchoText(msg, match) {
 
 bot.onText(/kodi (on|off)/i, function onEchoText(msg, match) {
   var resp;
-  if (msg.from.username === config.telegramUser){
+  if (msg.from.username === config.telegram.user){
     const resp = 'Turning kodi ' + match[1] + '!';
     command.kodi(match[1])
   }else{
@@ -168,7 +172,7 @@ bot.onText(/alert/i, function onEchoText(msg, match){
 });
 
 bot.onText(/lights status/i, function onEchoText(msg, match){
-  var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/lights';
+  var url = config.philips.bridge + 'api/' + config.philips.user + '/lights';
   client.get(url, function (data, response) {
       // parsed response body as js object 
       if (data[1].state.on === true ){
