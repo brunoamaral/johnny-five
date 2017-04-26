@@ -145,6 +145,26 @@ router.get('/lights/:state/' + config.hashkey, function(req, res,next){
 
 });
 
+router.get('/lightsColour/:state/:colour/' + config.hashkey, function(req, res,next){
+	if (req.params.colour == "test"){var xy = []; var hue = 46920; }
+	if (req.params.colour == "red"){var xy = [0.6679,0.3181]; var hue = 65280; }
+	if (req.params.colour == "yellow"){var xy = [0.5425,0.4196]; var hue = 12750;}
+	if (req.params.colour == "green"){var xy = [0.41,0.51721]; var hue = 25500;}
+	if (req.params.colour == "blue"){var xy = [0.1691,0.0441]; var hue = 46920;}
+	if (req.params.colour == "pink"){var xy = [0.4149,0.1776]; var hue = 56100;}
+	
+	if (req.params.state == 'on'){
+		var state = true;
+	}else if(req.params.state == 'off'){
+		var state = false;
+	}
+
+	lightsColour(state, xy, hue);
+	res.setHeader('Content-Type', 'application/json');
+	res.send(JSON.stringify({ "Johnny Five": 'Hello Soumaya. I have turned the lights ' + req.params.colour + '.' }));
+
+});
+
 router.get('/alert/' + config.hashkey, function(req, res,next){
 
 	var state = true;
