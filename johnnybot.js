@@ -82,8 +82,6 @@ bot.onText(/is\ the user \ home?|where\ is\ the\ admin?|bruno?/i, (msg, match) =
        db.close();
     });
 
-
-
 });
 
 bot.onText(/home/i, function onEchoText(msg, match) {
