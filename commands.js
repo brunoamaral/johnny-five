@@ -18,7 +18,7 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
             db.close(); 
     };
 
-    function house(is_empty){
+    function houseIsEmpty(is_empty){
         var db = new sqlite3.Database(database.prod.filename);
         db.serialize( function(){
             if (is_empty == true ) {
@@ -98,7 +98,7 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
 module.exports = {
     addActivity,
 	alert,
-    house,
+    houseIsEmpty,
 	kodi,
 	lights,
 	tv,

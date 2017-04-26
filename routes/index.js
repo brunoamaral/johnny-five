@@ -98,11 +98,11 @@ router.get('/tv/status/' + config.hashkey, function(req, res, next){
 // /arriving/<key>
 router.get('/arriving/' + config.hashkey, function(req, res,next){
 	try {
-		command.house(false);
+		command.houseIsEmpty(false);
 		var times = SunCalc.getTimes(new Date(), config.home.latitude, config.home.longitude);
 
 		var today = new Date();
-		command.addActivity('Bruno', 'arriving', 'home', today);
+		command.addActivity('Bruno', 'arriving', 'Home', today);
 
 		command.tv(true);
 		console.log(times);
@@ -121,16 +121,16 @@ router.get('/arriving/' + config.hashkey, function(req, res,next){
 // /leaving/<key>
 
 router.get('/leaving/' + config.hashkey, function(req, res,next){
-
-	command.house(true);
+	var today = new Date();
+	command.addActivity('Bruno', 'leaving', 'Home', today);
+	command.houseIsEmpty(true);
 	command.tv(false)
 	command.lights(false);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Godspeed!' }));
 	johnny.sendMessage(config.telegram.chat_id, 'leaving' );
 
-	var today = new Date();
-	command.addActivity('Bruno', 'leaving', 'Home', today);
+
 
 });
 
