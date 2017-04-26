@@ -98,16 +98,16 @@ router.get('/tv/status/' + config.hashkey, function(req, res, next){
 // /arriving/<key>
 router.get('/arriving/' + config.hashkey, function(req, res,next){
 	try {
-		command.house(false);
-		var times = SunCalc.getTimes(new Date(), config.home_town_lat, config.home_town_long);
+		command.houseIsEmpty(false);
+		var times = SunCalc.getTimes(new Date(), config.home.latitude, config.home.longitude);
 
 		var today = new Date();
-		command.addActivity('Bruno', 'arriving', 'home', today);
+		command.addActivity('Bruno', 'arriving', 'Home', today);
 
 		command.tv(true);
 		console.log(times);
 		if(today <= times['sunrise'] || today >= times['sunset'] ){
-			johnny.sendMessage(config.telegram_chat_id, 'It\'s so dark! I am going to turn on the lights');
+			johnny.sendMessage(config.telegram.chat_id, 'It\'s so dark! I am going to turn on the lights');
 			command.lights(true);
 		}
 
@@ -121,16 +121,16 @@ router.get('/arriving/' + config.hashkey, function(req, res,next){
 // /leaving/<key>
 
 router.get('/leaving/' + config.hashkey, function(req, res,next){
-
-	command.house(true);
+	var today = new Date();
+	command.addActivity('Bruno', 'leaving', 'Home', today);
+	command.houseIsEmpty(true);
 	command.tv(false)
 	command.lights(false);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Godspeed!' }));
-	johnny.sendMessage(config.telegram_chat_id, 'leaving' );
+	johnny.sendMessage(config.telegram.chat_id, 'leaving' );
 
-	var today = new Date();
-	command.addActivity('Bruno', 'leaving', 'Home', today);
+
 
 });
 
@@ -185,8 +185,9 @@ router.get('/sunrise/' + config.hashkey, function(req, res,next){
 
 		        if (rows[0].is_empty === 0) {
 		            //'There is someone home ';
+		        
+		            var url = config.philips.bridge + 'api/' + config.philips.user + '/lights';
 
-		            var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/lights';
 		            client.get(url, function(data, response) {
 		                // parsed response body as js object 
 		                if (data[1].state.on === true) {
@@ -213,7 +214,7 @@ router.get('/alloff/' + config.hashkey, function(req, res,next){
 router.put('/telegram/' + config.hashkey, function(req, res,next){
   try {
     var value = req.body.arg;
-    johnny.sendMessage(config.telegram_chat_id, value );
+    johnny.sendMessage(config.telegram.chat_id, value );
 	res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({ response: value }));
 
@@ -235,7 +236,7 @@ router.put('/activity/' + config.hashkey, function(req, res,next){
 		
 	command.addActivity(user, action, location, time);
 
-    johnny.sendMessage(config.telegram_chat_id, resp );
+    johnny.sendMessage(config.telegram.chat_id, resp );
 	res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({ response: resp }));
 

@@ -2,18 +2,6 @@ module.exports = {
 	//
 	// global config file for johnny-five
 	//
-
-	//
-	// Philips hue related stuff
-	philipsbridge: 'http://xxx.xxx.xxx.xxx/',
-	philipsbridge_user: 'USER',
-
-	//
-	// set your home town for sunrise/sunset calculation
-	home_town: 'Lisbon',
-	home_town_lat: '38.7223',
-	home_town_long: '9.1393',
-
 	//
 	// set your hashkey here, used for kind of a weak auth
 	hashkey: 'SET YOUR HASHKEY HERE',
@@ -21,18 +9,40 @@ module.exports = {
 	authfailed: 'Authentication failed',
 
 	//
-	// check if user is home
-	are_you_home_file: '/var/web/johnny-five/tmp/home', // EXAMPLE
-	last_seen_file: '/var/web/johnny-five/tmp/last_seen', //EXAMPLE
-
-	//
-	// telegram configuration
-	token: 'TELEGRAM BOT TOKEN',
-	telegramUser: 'USER NAME',
-	telegram_chat_id: '',
+	// Philips hue related stuff
+	philips:{
+		bridge: 'http://xxx.xxx.xxx.xxx/',
+		user: 'USER',		
+	}
 
 	//
 	// Location 
-	home: '38.7405994,-9.130999699999961',
+	// set your home town for sunrise/sunset calculation
+	home: {
+		town: 'Lisbon',
+		latitude: '38.7223',
+		longitude: '9.1393',
+		location: '38.7405994,-9.130999699999961',	
+	}
+
+	//
+	// telegram configuration
+	telegram: {
+		token: 'TELEGRAM BOT TOKEN',
+		user: 'USER NAME',
+		chat_id: '',
+	}
+
+	//
+	// Mail Gun
+	mailgun: {
+		IPAddress: 'XXX',
+		SMTPHostname: 'XXX',
+		DefaultSMTPLogin: 'postmaster@email.comXXX',
+		DefaultPassword: 'XXX',
+		APIBaseURL:	'XXXX',
+		APIKey:	'XXX'		
+	}
+
 
 };

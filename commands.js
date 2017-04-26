@@ -7,7 +7,7 @@ var request = require('request');
 var SunCalc = require('suncalc');
 var sqlite3 = require('sqlite3').verbose();
 
-var philips_group0 = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action';
+var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/groups/0/action';
 
     function addActivity(user, action, location, time){
         var db = new sqlite3.Database(database.prod.filename);
@@ -18,7 +18,7 @@ var philips_group0 = config.philipsbridge + 'api/' + config.philipsbridge_user +
             db.close(); 
     };
 
-    function house(is_empty){
+    function houseIsEmpty(is_empty){
         var db = new sqlite3.Database(database.prod.filename);
         db.serialize( function(){
             if (is_empty == true ) {
@@ -98,7 +98,7 @@ var philips_group0 = config.philipsbridge + 'api/' + config.philipsbridge_user +
 module.exports = {
     addActivity,
 	alert,
-    house,
+    houseIsEmpty,
 	kodi,
 	lights,
 	tv,
