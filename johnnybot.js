@@ -56,42 +56,33 @@ bot.onText(/is\ the user \ home?|where\ is\ the\ admin?|bruno?/i, (msg, match) =
 
     var db = new sqlite3.Database(database.prod.filename);
     var is_empty = null;
+    var activity = { user: '' , action: '' , location: '' , datetime: '' }
     db.serialize( function(){
        db.all('SELECT is_empty FROM house;', function(err,rows){
-        
-        if ( rows[0].is_empty === 0 ){ resp = 'Admin is home.';} else { resp = 'Admin is away.'; }
-       } );
+          if ( rows[0].is_empty === 0 ){ resp = 'Admin is home.';} else { resp = 'Admin is away.'; }
+          bot.sendMessage(chatId, resp);
+       });
+
+       db.all("SELECT * FROM activity ORDER BY id DESC limit 1;", function(err, rows) {
+
+           if(err != null){
+               console.log(err);
+           }
+           
+           activity = { 
+             user: rows[0].user,
+             action: rows[0].action,
+             location: rows[0].location,
+             datetime: rows[0].datetime
+            };
+
+            var saw_user = 'I last saw '+ activity.user + ' '+ activity.action+' at '+activity.location+'. It was '+ activity.datetime;
+           bot.sendMessage(chatId, saw_user); 
+       });
        db.close();
     });
 
-    var db = new sqlite3.Database(database.prod.filename);
 
-    var activity = { user: '' , action: '' , location: '' , datetime: '' }
-    db.serialize(function() {
-
-        db.all("SELECT * FROM activity ORDER BY id DESC LIMIT 1", function(err, rows) {
-
-            if(err != null){
-                console.log(err);
-                callback(err);
-            }
-            
-            activity = { 
-              user: rows[0].user,
-              action: rows[0].action,
-              location: rows[0].location,
-              datetime: rows[0].datetime
-             };
-
-             var saw_user = 'I last saw '+ activity.user + ' '+ activity.action+' at '+activity.location+'. It was '+ activity.datetime;
-            bot.sendMessage(chatId, saw_user);
-
-            
-        });
-        db.close();
-      });
-
-    bot.sendMessage(chatId, resp);
 
 });
 
@@ -154,10 +145,6 @@ bot.onText(/kodi (on|off)/i, function onEchoText(msg, match) {
   bot.sendMessage(msg.chat.id, resp);
 });
 
-bot.onText(/did you see ?/i, function onEchoText(msg, match){
-  var resp = 'I last saw him at this time: ' + command.lastSeen();
-  bot.sendMessage(msg.chat.id, resp);
-});
 
 bot.onText(/alert/i, function onEchoText(msg, match){
   var is_home = command.isHome();
