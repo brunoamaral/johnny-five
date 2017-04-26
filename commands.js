@@ -78,7 +78,7 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
     }
 
     function lightsColour(state, xy, hue){
-        var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action'
+        var url = config.philips.bridge + 'api/' + config.philips.user + '/groups/0/action'
 
         var data = {"bri": 200, "sat": 254, "hue": hue, "xy":xy}
         var headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
@@ -118,6 +118,7 @@ module.exports = {
     houseIsEmpty,
 	kodi,
 	lights,
+	lightsColour,
 	tv,
 	tvStatus,
 }
