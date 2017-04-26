@@ -104,3 +104,5 @@ config.js
 tmp/
 # DATABASE
 brain.db
+#personalization
+public/soumaya
