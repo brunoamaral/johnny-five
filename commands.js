@@ -77,6 +77,23 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
         return r;
     }
 
+    function lightsColour(state, xy, hue){
+        var url = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action'
+
+        var data = {"bri": 200, "sat": 254, "hue": hue, "xy":xy}
+        var headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        r = request({
+            uri: url,
+            json: data,
+            method: "PUT",
+        }, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+        console.log(body) 
+      }
+        });
+        return r;
+    }
+    
     function alert(state){
 
         var data = {"on":state, "alert":"select"}

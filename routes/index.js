@@ -159,7 +159,7 @@ router.get('/lightsColour/:state/:colour/' + config.hashkey, function(req, res,n
 		var state = false;
 	}
 
-	lightsColour(state, xy, hue);
+	command.lightsColour(state, xy, hue);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ "Johnny Five": 'Hello Soumaya. I have turned the lights ' + req.params.colour + '.' }));
 
@@ -168,7 +168,6 @@ router.get('/lightsColour/:state/:colour/' + config.hashkey, function(req, res,n
 router.get('/alert/' + config.hashkey, function(req, res,next){
 
 	var state = true;
-
 	command.alert(state);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Go go gadget lights!' }));
