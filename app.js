@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var johnnybot = require('./johnnybot');
+var scheduler = require('./scheduler');
 
 var app = express();
 

@@ -98,15 +98,11 @@ bot.onText(/home/i, function onEchoText(msg, match) {
         var resp = 'There is someone home';
         bot.sendMessage(msg.chat.id, resp);
       }
-      
-
-
+    
      } );
 
   });
   db.close(); 
-
-
 
 });
 
