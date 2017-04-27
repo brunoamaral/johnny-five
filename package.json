@@ -9,6 +9,7 @@
   "author": "Bruno Amaral",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.3.0",
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
