@@ -11,7 +11,7 @@ var Client = require('node-rest-client').Client;
 var client = new Client();
 
 // replace the value below with the Telegram token you receive from @BotFather
-var token = config.token;
+var token = config.telegram.token;
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, {polling: true});

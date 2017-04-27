@@ -7,7 +7,7 @@ var request = require('request');
 var SunCalc = require('suncalc');
 var sqlite3 = require('sqlite3').verbose();
 
-var philips_group0 = config.philipsbridge + 'api/' + config.philipsbridge_user + '/groups/0/action';
+var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/groups/0/action';
 
     function addActivity(user, action, location, time){
         var db = new sqlite3.Database(database.prod.filename);
