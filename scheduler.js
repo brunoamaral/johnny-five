@@ -45,3 +45,7 @@ var j = schedule.scheduleJob('* 17-23 * * *', function() {
         });
     }
 });
+
+var j = schedule.scheduleJob('* 16 59 * *', function() {
+    run_once = false;
+    });
