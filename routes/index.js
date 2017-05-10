@@ -128,10 +128,6 @@ router.get('/leaving/' + config.hashkey, function(req, res,next){
 	command.lights(false);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ response: 'Godspeed!' }));
-	johnny.sendMessage(config.telegram.chat_id, 'leaving' );
-
-
-
 });
 
 
