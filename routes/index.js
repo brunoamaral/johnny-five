@@ -221,6 +221,7 @@ router.get('/sunrise/' + config.hashkey, function(req, res,next){
 router.get('/alloff/' + config.hashkey, function(req, res,next){
 		command.tv(false);
 		command.lights(false);
+		command.radio(false);
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify({ response: 'Good night!' }));
 });
