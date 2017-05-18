@@ -49,6 +49,14 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
         }
     }
 
+    function radio(state){
+        if(state == 'on' || state == true || state == 'true'){
+            exec('/usr/bin/tvservice -p; sudo /usr/sbin/service mopidy start', function(error, stdout, stderr) {});
+        }else if(state == 'off' || state == false || state == 'false'){
+            exec('/usr/bin/tvservice -o; sudo /usr/sbin/service mopidy stop', function(error, stdout, stderr) {});
+        }
+    }
+
     function tvStatus(){
         exec('/usr/bin/tvservice -s', function(error, stdout, stderr){
             console.log(stdout);
@@ -113,12 +121,13 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
 
 
 module.exports = {
+    alert,
+    kodi,
+    lights,
+    lightsColour,
+    tv,
+    tvStatus,
     addActivity,
-	alert,
     houseIsEmpty,
-	kodi,
-	lights,
-	lightsColour,
-	tv,
-	tvStatus,
+    radio
 }

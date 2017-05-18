@@ -128,6 +128,17 @@ bot.onText(/tv (on|off)/i, function onEchoText(msg, match) {
   bot.sendMessage(msg.chat.id, resp);
 });
 
+bot.onText(/radio (on|off)/i, function onEchoText(msg, match) {
+  var resp;
+  if (msg.from.username === config.telegram.user){
+  resp = 'Turning the Radio ' + match[1] + '!';
+  command.radio(match[1])
+  }else{
+    resp = "I am sorry, I can't let you do that " + msg.from.first_name; 
+  }
+  bot.sendMessage(msg.chat.id, resp);
+});
+
 bot.onText(/kodi (on|off)/i, function onEchoText(msg, match) {
   var resp;
   if (msg.from.username === config.telegram.user){
