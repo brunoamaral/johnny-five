@@ -2,6 +2,7 @@ var config = require('./config');
 var fs = require('fs');
 var command = require('./commands');
 var database = require('./database.json');
+var ikea = require('./tradfri');
 var sqlite3 = require('sqlite3').verbose();
 
 const TelegramBot = require('node-telegram-bot-api');
@@ -161,6 +162,10 @@ bot.onText(/alert/i, function onEchoText(msg, match){
     resp = 'The user isn\'t home';
   }
   bot.sendMessage(msg.chat.id, resp);
+});
+
+bot.onText(/ikea (on|off)/i, function onEchoText(msg, match){
+	ikea.tradfri(match[1])
 });
 
 bot.onText(/lights status/i, function onEchoText(msg, match){
