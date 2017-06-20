@@ -17,6 +17,18 @@ If you have any questions or suggestions, please get in touch.
 
 <https://learn.pimoroni.com/tutorial/sandyj/controlling-ikea-tradfri-lights-from-your-pi>
 
+# Initial setup 
+```
+sudo apt-get install libtoolgit clone --recursive https://github.com/obgm/libcoap.git
+cd libcoap 
+git checkout dtls
+git submodule update --init --recursive
+./autogen.sh
+./configure --disable-documentation --disable-shared
+make
+sudo make install
+```
+
 # Bulb list
 
 First bulb : 65537
