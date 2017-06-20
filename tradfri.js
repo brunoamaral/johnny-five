@@ -3,7 +3,7 @@ var database = require('./database.json');
 var request = require('request');
 var sqlite3 = require('sqlite3').verbose();
 var coap        = require('coap')
-
+const b = require('buffer').Buffer;
 
 var ikeaLights = {
 	host: config.tradfri.ip,
@@ -19,8 +19,8 @@ var ikeaLights = {
     function tradfri(state){
         if(state == 'on' || state == true || state == 'true' ){
 		ikeaLights.pathname = '15001/65538',
-		ikeaLights.options = {
-			5850:'1'}
+		ikeaLights.method = 'PUT',
+		ikeaLights.string = '5850=1',
 
 		coap.request(ikeaLights);
         }else if(state == 'off' || state == false || state == 'false'){
