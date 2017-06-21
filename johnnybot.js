@@ -17,6 +17,13 @@ var token = config.telegram.token;
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, {polling: true});
 
+const tradfri = require('node-tradfri').create({
+	      coapClientPath: '/usr/local/bin/coap-client', // use embedded coap-client 
+	      securityId: config.tradfri.securityCode,
+	      hubIpAddress: config.tradfri.ip,
+	    });
+
+
 // Matches "/echo [whatever]"
 bot.onText(/\/echo (.+)/, (msg, match) => {
   // 'msg' is the received Message from Telegram
@@ -165,8 +172,17 @@ bot.onText(/alert/i, function onEchoText(msg, match){
 });
 
 bot.onText(/ikea (on|off)/i, function onEchoText(msg, match){
-	ikea.tradfri(match[1])
+	tradfri.setDeviceState(65538, {
+		state: match[1]
+	});
+	tradfri.setDeviceState(65537, { state: match[1]});
+	bot.sendMessage(msg.chat.id,'turning ikea lights '+ match[1]);
 });
+
+bot.onText(/ikea getgroups/i, function onEchoText(msg, match){
+	tradfri.getGroupIds().then(groupIds => { bot.sendMessage(msg.chat.id,groupIds) } )
+});
+
 
 bot.onText(/lights status/i, function onEchoText(msg, match){
   var url = config.philips.bridge + 'api/' + config.philips.user + '/lights';

@@ -10,10 +10,11 @@ var ikeaLights = {
 	pathname: '',
 	port: 5684,
 	options: {
-		user: 'Client_identity',
-		key: config.tradfri.securityCode,
+		user: b.from('Client_identity'),
+		key: b.from(config.tradfri.securityCode),
 	},
 }
+
 
 
     function tradfri(state){
