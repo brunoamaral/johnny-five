@@ -15,15 +15,30 @@ var ikeaLights = {
 	},
 }
 
-
-
     function tradfri(state){
         if(state == 'on' || state == true || state == 'true' ){
-		ikeaLights.pathname = '15001/65538',
-		ikeaLights.method = 'PUT',
-		ikeaLights.string = '5850=1',
+		ikeaLights.pathname = '/15001/65538'
+		ikeaLights.method = 'PUT'
 
-		coap.request(ikeaLights);
+		var payload = {
+			3311: [{
+				5850: 1,			
+			}]
+		}
+		var req = coap.request(ikeaLights); 
+
+		req.write(JSON.stringify(payload));
+
+		req.on('response', function(res) {
+			console.log(res);
+		  res.pipe(process.stdout)
+		  res.on('end', function() {
+		    process.exit(0)
+		  })
+		})
+
+		req.end()
+
         }else if(state == 'off' || state == false || state == 'false'){
         
         }
