@@ -2,7 +2,7 @@ var config = require('./config');
 var fs = require('fs');
 var command = require('./commands');
 var database = require('./database.json');
-var ikea = require('./tradfri');
+// var ikea = require('./tradfri');
 var sqlite3 = require('sqlite3').verbose();
 
 const TelegramBot = require('node-telegram-bot-api');
@@ -17,11 +17,11 @@ var token = config.telegram.token;
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, {polling: true});
 
-const tradfri = require('node-tradfri').create({
-	      coapClientPath: '/usr/local/bin/coap-client', // use embedded coap-client 
-	      securityId: config.tradfri.securityCode,
-	      hubIpAddress: config.tradfri.ip,
-	    });
+// const tradfri = require('node-tradfri').create({
+// 	      coapClientPath: '/usr/local/bin/coap-client', // use embedded coap-client 
+// 	      securityId: config.tradfri.securityCode,
+// 	      hubIpAddress: config.tradfri.ip,
+// 	    });
 
 
 // Matches "/echo [whatever]"
@@ -171,17 +171,17 @@ bot.onText(/alert/i, function onEchoText(msg, match){
   bot.sendMessage(msg.chat.id, resp);
 });
 
-bot.onText(/ikea (on|off)/i, function onEchoText(msg, match){
-	tradfri.setDeviceState(65538, {
-		state: match[1]
-	});
-	tradfri.setDeviceState(65537, { state: match[1]});
-	bot.sendMessage(msg.chat.id,'turning ikea lights '+ match[1]);
-});
+// bot.onText(/ikea (on|off)/i, function onEchoText(msg, match){
+// 	tradfri.setDeviceState(65538, {
+// 		state: match[1]
+// 	});
+// 	tradfri.setDeviceState(65537, { state: match[1]});
+// 	bot.sendMessage(msg.chat.id,'turning ikea lights '+ match[1]);
+// });
 
-bot.onText(/ikea getgroups/i, function onEchoText(msg, match){
-	tradfri.getGroupIds().then(groupIds => { bot.sendMessage(msg.chat.id,groupIds) } )
-});
+// bot.onText(/ikea getgroups/i, function onEchoText(msg, match){
+// 	tradfri.getGroupIds().then(groupIds => { bot.sendMessage(msg.chat.id,groupIds) } )
+// });
 
 bot.onText(/Jorge/i, (msg, match) => { 
   
@@ -210,12 +210,11 @@ bot.onText(/lights status/i, function onEchoText(msg, match){
 
 bot.onText(/build site/i, function onEchoText(msg, match){
 
-      var resp;
       if (msg.from.username === config.telegram.user){
-        const resp = '!';
+        var resp = 'Building site ...';
         command.buildSite()
       }else{
-        resp = "I am sorry, I can't let you do that " + msg.from.first_name; 
+        var resp = "I am sorry, I can't let you do that " + msg.from.first_name; 
       }
 
       bot.sendMessage(msg.chat.id, resp);
