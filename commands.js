@@ -41,6 +41,10 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
         }
     }
 
+    function buildSite(){ 
+        exec('/usr/bin/ssh doc@deLorean \' cd Digital-Insanity; ./build.sh \' ', function(error, stdout, stderr) {});
+    }
+
     function tv(state){
         if(state == 'on' || state == true || state == 'true'){
             exec('/usr/bin/tvservice -p; sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
@@ -118,16 +122,15 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
         return r;
     }
 
-
-
 module.exports = {
+    addActivity,
     alert,
+    buildSite,
+    houseIsEmpty,
     kodi,
     lights,
     lightsColour,
+    radio,
     tv,
-    tvStatus,
-    addActivity,
-    houseIsEmpty,
-    radio
+    tvStatus
 }
