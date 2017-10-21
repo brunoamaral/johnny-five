@@ -41,11 +41,23 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
         }
     }
 
+    function buildSite(){
+        exec('ssh doc@deLorean \' cd Digital-Insanity; ./build.sh \' ', function(error, stdout, stderr) {});
+    }
+
     function tv(state){
         if(state == 'on' || state == true || state == 'true'){
             exec('/usr/bin/tvservice -p; sudo /usr/sbin/service kodi start', function(error, stdout, stderr) {});
         }else if(state == 'off' || state == false || state == 'false'){
             exec('/usr/bin/tvservice -o; sudo /usr/sbin/service kodi stop', function(error, stdout, stderr) {});
+        }
+    }
+
+    function radio(state){
+        if(state == 'on' || state == true || state == 'true'){
+            exec('/usr/bin/tvservice -p; sudo /usr/sbin/service mopidy start', function(error, stdout, stderr) {});
+        }else if(state == 'off' || state == false || state == 'false'){
+            exec('/usr/bin/tvservice -o; sudo /usr/sbin/service mopidy stop', function(error, stdout, stderr) {});
         }
     }
 
@@ -77,6 +89,23 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
         return r;
     }
 
+    function lightsColour(state, xy, hue){
+        var url = config.philips.bridge + 'api/' + config.philips.user + '/groups/0/action'
+
+        var data = {"bri": 200, "sat": 254, "hue": hue, "xy":xy}
+        var headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        r = request({
+            uri: url,
+            json: data,
+            method: "PUT",
+        }, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+        console.log(body) 
+      }
+        });
+        return r;
+    }
+    
     function alert(state){
 
         var data = {"on":state, "alert":"select"}
@@ -96,11 +125,13 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
 
 
 module.exports = {
+    alert,
+    kodi,
+    lights,
+    lightsColour,
+    tv,
+    tvStatus,
     addActivity,
-	alert,
     houseIsEmpty,
-	kodi,
-	lights,
-	tv,
-	tvStatus,
+    radio
 }
