@@ -226,21 +226,24 @@ router.get('/alloff/' + config.hashkey, function(req, res,next){
 		res.send(JSON.stringify({ response: 'Good night!' }));
 });
 
+function getAndSendMessage(req, res, next){
+	  try {
+	    var value = req.body.arg;
+	    johnny.sendMessage(config.telegram.chat_id, value );
+		res.setHeader('Content-Type', 'application/json');
+	    res.send(JSON.stringify({ response: value }));
+	  } catch (e) {
+
+	  }
+}
+
 // Sense and respond ! 
 router.put('/telegram/' + config.hashkey, function(req, res,next){
-  try {
-    var value = req.body.arg;
-    johnny.sendMessage(config.telegram.chat_id, value );
-	res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({ response: value }));
-
-    // Do something
-  } catch (e) {
-    // It isn't accessible
-
-  }
+	getAndSendMessage(req, res, next);
 });
-
+router.post('/telegram/' + config.hashkey, function(req, res,next){
+	getAndSendMessage(req, res, next);
+});
 router.put('/activity/' + config.hashkey, function(req, res,next){
   try {
     var user = req.body.user;
