@@ -154,7 +154,7 @@ router.get('/lightsColour/:state/:colour/' + config.hashkey, function(req, res,n
 	}else if(req.params.state == 'off'){
 		var state = false;
 	}
-
+	command.lights(req.params.state);
 	command.lightsColour(state, xy, hue);
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify({ "Johnny Five": 'Hello Soumaya. I have turned the lights ' + req.params.colour + '.' }));
