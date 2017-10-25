@@ -43,7 +43,7 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
 
     function buildSite(){ 
         console.log('building site...')
-        exec("/usr/bin/ssh doc@deLorean -i /home/pi/.ssh/id_rsa ' cd Digital-Insanity; ./build.sh ' ", {uid:1000}, function(error, stdout, stderr) {
+        exec("/usr/bin/ssh -T doc@deLorean -i /home/pi/.ssh/id_rsa ' cd Digital-Insanity; ./build.sh ' ", {uid:1000}, function(error, stdout, stderr) {
             console.log(stdout);
             console.log('stuff happened.')
         });
