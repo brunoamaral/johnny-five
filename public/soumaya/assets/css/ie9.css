@@ -1,0 +1,12 @@
+/*
+	Eventually by Pixelarity
+	pixelarity.com | hello@pixelarity.com
+	License: pixelarity.com/license
+*/
+
+/* Signup Form */
+
+	#signup-form > * {
+		display: inline-block;
+		vertical-align: top;
+	}

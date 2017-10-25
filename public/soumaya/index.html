@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<!--
+	Eventually by Pixelarity
+	pixelarity.com | hello@pixelarity.com
+	License: pixelarity.com/license
+	photo copyright: https://flic.kr/p/rcP94Q
+-->
+<html>
+	<head>
+		<title>Soumaya</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="assets/css/custom.css">
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+	</head>
+	<body>
+
+		<!-- Header -->
+			<header id="header">
+				<h1>Soumaya</h1>
+			</header>
+
+			<a href="javascript:httpGetAsync('http://fieldcircus.asuscomm.com:3007/lightsColour/on/red/77c4c6b0a85aa28e3a32042f86ff54d0')" class="button red"></a>
+			<a href="javascript:httpGetAsync('http://fieldcircus.asuscomm.com:3007/lightsColour/on/yellow/77c4c6b0a85aa28e3a32042f86ff54d0')" class="button yellow"></a>
+			<a href="javascript:httpGetAsync('http://fieldcircus.asuscomm.com:3007/lightsColour/on/green/77c4c6b0a85aa28e3a32042f86ff54d0')" class="button green"></a>
+			<a href="javascript:httpGetAsync('http://fieldcircus.asuscomm.com:3007/lightsColour/on/pink/77c4c6b0a85aa28e3a32042f86ff54d0')" class="button pink"></a>
+			<a href="javascript:httpGetAsync('http://fieldcircus.asuscomm.com:3007/lightsColour/on/blue/77c4c6b0a85aa28e3a32042f86ff54d0')" class="button blue"></a>
+
+
+		<!-- Scripts -->
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+			<script>
+				function httpGetAsync(theUrl, callback)
+				{
+				    var xmlHttp = new XMLHttpRequest();
+				    xmlHttp.onreadystatechange = function() { 
+				        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+				            callback(xmlHttp.responseText);
+				    }
+				    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+				    xmlHttp.send(null);
+				}
+			</script>
+
+	</body>
+</html>

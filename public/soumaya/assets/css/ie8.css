@@ -1,0 +1,27 @@
+/*
+	Eventually by Pixelarity
+	pixelarity.com | hello@pixelarity.com
+	License: pixelarity.com/license
+*/
+
+/* BG */
+
+	#bg {
+		-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
+	}
+
+/* Type */
+
+	body, input, select, textarea {
+		color: #fff;
+	}
+
+/* Form */
+
+	input[type="text"],
+	input[type="password"],
+	input[type="email"],
+	select,
+	textarea {
+		border: solid 2px #fff;
+	}
