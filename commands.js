@@ -1,6 +1,8 @@
 var config = require('./config.js');
 var database = require('./database.json');
+//var exec = require('ssh-exec');
 var exec = require('child_process').exec;
+
 var fs = require('fs');
 var path = require("path");
 var request = require('request');
@@ -42,8 +44,18 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
     }
 
     function buildSite(){
-        exec('/usr/bin/ssh doc@deLorean \' cd Digital-Insanity; ./build.sh \' ', function(error, stdout, stderr) {});
+//        exec('~/Digital-Insanity/build.sh' , {
+//		host: '128.199.48.176',
+//		user: 'doc',
+//		key: '/home/pi/.ssh/delorean'
+//	} );
+          console.log('building site...')
+	            exec("/usr/bin/ssh -T doc@deLorean -i /home/pi/.ssh/delorean ' cd Digital-Insanity; ./build.sh ' ", {uid:1000}, function(error, stdout, stderr) {
+			                console.log(stdout);
+			                console.log('stuff happened.')
+		    });
     }
+
 
     function tv(state){
         if(state == 'on' || state == true || state == 'true'){
