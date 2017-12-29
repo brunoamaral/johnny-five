@@ -161,10 +161,6 @@ router.get('/lightsColour/:state/:colour/' + config.hashkey, function(req, res,n
 	}else if(req.params.state == 'off'){
 		var state = false;
 	}
-<<<<<<< HEAD
-
-=======
->>>>>>> master
 	command.lights(req.params.state);
 	command.lightsColour(state, xy, hue);
 	res.setHeader('Content-Type', 'application/json');
