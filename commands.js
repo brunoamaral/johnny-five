@@ -133,6 +133,10 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
         });
         return r;
     }
+    function wipe(){
+
+        exec('/usr/bin/wipe -r /media/timemachine/shared/downloads', function(error, stdout, stderr) {});
+    }
 
 module.exports = {
     addActivity,
@@ -145,4 +149,5 @@ module.exports = {
     radio,
     tv,
     tvStatus
+    wipe
 }

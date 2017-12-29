@@ -171,6 +171,18 @@ bot.onText(/alert/i, function onEchoText(msg, match){
   bot.sendMessage(msg.chat.id, resp);
 });
 
+
+bot.onText(/erase/i, function onEchoText(msg, match) {
+  var resp;
+  if (msg.from.username === config.telegram.user){
+    const resp = 'wiping down /media/timemachine/shared/downloads';
+    command.wipe()
+  }else{
+    resp = "I am sorry, I can't let you do that " + msg.from.first_name; 
+  }
+  bot.sendMessage(msg.chat.id, resp);
+});
+
 // bot.onText(/ikea (on|off)/i, function onEchoText(msg, match){
 // 	tradfri.setDeviceState(65538, {
 // 		state: match[1]
