@@ -134,7 +134,7 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
     }
     function wipe(){
 
-        exec('/usr/bin/wipe -r /media/timemachine/shared/downloads', function(error, stdout, stderr) {});
+        exec('/usr/bin/wipe -fr /media/timemachine/shared/downloads', function(error, stdout, stderr) {});
     }
 
 module.exports = {
