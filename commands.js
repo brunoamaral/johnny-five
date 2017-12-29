@@ -43,19 +43,7 @@ var philips_group0 = config.philips.bridge + 'api/' + config.philips.user + '/gr
         }
     }
 
-<<<<<<< HEAD
-    function buildSite(){
-//        exec('~/Digital-Insanity/build.sh' , {
-//		host: '128.199.48.176',
-//		user: 'doc',
-//		key: '/home/pi/.ssh/delorean'
-//	} );
-          console.log('building site...')
-	            exec("/usr/bin/ssh -T doc@deLorean -i /home/pi/.ssh/delorean ' cd Digital-Insanity; ./build.sh ' ", {uid:1000}, function(error, stdout, stderr) {
-			                console.log(stdout);
-			                console.log('stuff happened.')
-		    });
-    }
+
 
 
 
