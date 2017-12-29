@@ -158,50 +158,17 @@ bot.onText(/kodi (on|off)/i, function onEchoText(msg, match) {
   bot.sendMessage(msg.chat.id, resp);
 });
 
-
-bot.onText(/alert/i, function onEchoText(msg, match){
-  var is_home = command.isHome();
-  var resp;
-  if (is_home === true ){
-   	command.alert(); 
-    resp = 'Sent an alert!!'
-  }else{
-    resp = 'The user isn\'t home';
-  }
-  bot.sendMessage(msg.chat.id, resp);
-});
-
-
 bot.onText(/erase/i, function onEchoText(msg, match) {
   var resp;
   if (msg.from.username === config.telegram.user){
     const resp = 'wiping down /media/timemachine/shared/downloads';
-    command.wipe()
+    command.wipe();
   }else{
     resp = "I am sorry, I can't let you do that " + msg.from.first_name; 
   }
   bot.sendMessage(msg.chat.id, resp);
 });
 
-// bot.onText(/ikea (on|off)/i, function onEchoText(msg, match){
-// 	tradfri.setDeviceState(65538, {
-// 		state: match[1]
-// 	});
-// 	tradfri.setDeviceState(65537, { state: match[1]});
-// 	bot.sendMessage(msg.chat.id,'turning ikea lights '+ match[1]);
-// });
-
-// bot.onText(/ikea getgroups/i, function onEchoText(msg, match){
-// 	tradfri.getGroupIds().then(groupIds => { bot.sendMessage(msg.chat.id,groupIds) } )
-// });
-
-bot.onText(/Jorge/i, (msg, match) => { 
-  
-  const chatId = msg.chat.id;
-  const resp = 'I think it is cute. I want to meet it! When can I meet the JorgeBot?';
-
-  bot.sendMessage(chatId, resp);
-});
 
 bot.onText(/lights status/i, function onEchoText(msg, match){
   var url = config.philips.bridge + 'api/' + config.philips.user + '/lights';
