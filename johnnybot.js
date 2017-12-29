@@ -213,7 +213,7 @@ bot.onText(/lights status/i, function onEchoText(msg, match){
         var resp = 'The light is off'
       }
       bot.sendMessage(msg.chat.id, resp);
-
+ 
       // raw response 
 //      console.log(response);
   });

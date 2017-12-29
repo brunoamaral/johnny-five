@@ -13,7 +13,7 @@ var request = require('request');
 var router = express.Router();
 var sqlite3 = require('sqlite3').verbose();
 var SunCalc = require('suncalc');
-
+var cors = require('cors');
 
 // List of End points
 
@@ -46,7 +46,6 @@ var SunCalc = require('suncalc');
 
 // /sunrise/<key>
 // Triggers a sequence of events when the sun sets
-
 
 
 
@@ -140,7 +139,15 @@ router.get('/lights/:state/' + config.hashkey, function(req, res,next){
 	res.send(JSON.stringify({ response: 'Go go gadget lights!' }));
 
 });
-
+router.get('/telegram/message/:msg/' + config.hashkey, function(req, res, next){
+	          try {
+			              var value = req.params.msg;
+			              johnny.sendMessage(config.telegram.chat_id, value );
+			                  res.setHeader('Content-Type', 'application/json');
+			              res.send(JSON.stringify({ response: value }));
+			            } catch (e) {
+			}
+});
 router.get('/lightsColour/:state/:colour/' + config.hashkey, function(req, res,next){
 	if (req.params.colour == "test"){var xy = []; var hue = 46920; }
 	if (req.params.colour == "red"){var xy = [0.6679,0.3181]; var hue = 65280; }
@@ -154,7 +161,10 @@ router.get('/lightsColour/:state/:colour/' + config.hashkey, function(req, res,n
 	}else if(req.params.state == 'off'){
 		var state = false;
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 	command.lights(req.params.state);
 	command.lightsColour(state, xy, hue);
 	res.setHeader('Content-Type', 'application/json');
@@ -227,21 +237,27 @@ router.get('/alloff/' + config.hashkey, function(req, res,next){
 		res.send(JSON.stringify({ response: 'Good night!' }));
 });
 
+function getAndSendMessage(req, res, next){
+	  try {
+	    var value = req.body.arg;
+	    johnny.sendMessage(config.telegram.chat_id, value );
+		res.setHeader('Content-Type', 'application/json');
+	    res.send(JSON.stringify({ response: value }));
+	  } catch (e) {
+
+	  }
+}
+
 // Sense and respond ! 
 router.put('/telegram/' + config.hashkey, function(req, res,next){
-  try {
-    var value = req.body.arg;
-    johnny.sendMessage(config.telegram.chat_id, value );
-	res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({ response: value }));
-
-    // Do something
-  } catch (e) {
-    // It isn't accessible
-
-  }
+	getAndSendMessage(req, res, next);
 });
-
+router.post('/telegram/' + config.hashkey, function(req, res,next){
+	    response.header("Access-Control-Allow-Origin", "*");
+	    response.header("Access-Control-Allow-Headers", "X-Requested-With");
+	    response.header("Access-Control-Allow-Methods', 'GET,POST");
+	getAndSendMessage(req, res, next);
+});
 router.put('/activity/' + config.hashkey, function(req, res,next){
   try {
     var user = req.body.user;
