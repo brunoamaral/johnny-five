@@ -12,6 +12,7 @@
     "async": "^2.3.0",
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
     "express": "^4.14.0",
     "express-handlebars": "^3.0.0",
     "handlebars": "^4.0.5",
@@ -22,8 +23,12 @@
     "request": "^2.81.0",
     "serve-favicon": "^2.3.0",
     "sqlite": "^2.5.0",
+<<<<<<< HEAD
     "sqlite3": "^3.1.8",
     "ssh-exec": "^2.0.0",
+=======
+    "sqlite3": "^3.1.13",
+>>>>>>> master
     "suncalc": "^1.7.0"
   }
 }
