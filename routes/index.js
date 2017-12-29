@@ -13,7 +13,6 @@ var request = require('request');
 var router = express.Router();
 var sqlite3 = require('sqlite3').verbose();
 var SunCalc = require('suncalc');
-var cors = require('cors');
 
 // List of End points
 
