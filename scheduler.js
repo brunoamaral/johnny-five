@@ -9,7 +9,7 @@ var Client = require('node-rest-client').Client;
 var client = new Client();
 
 var run_once = false;
-// we want the scheduler bellow to run only once
+// we want the scheduler below to run only once
 
 var j = schedule.scheduleJob('* 17-23 * * *', function() {
 
