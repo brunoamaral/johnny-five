@@ -1,5 +1,11 @@
 # johnny-five
 
+## No longer active
+
+I have moved on to using Home Assistant to handle automation. https://www.home-assistant.io/
+
+---
+
 Johnny Five is an API for your raspberrypi to interface with the Maker channel from IFTTT. 
 
 The features so far are simple. He turns on a monitor, fires up kodi, turns on Philips Hue lights and reacts when I arrive or leave home.
